@@ -3,6 +3,7 @@ import sim          # librería para conectar con CoppeliaSim
 import numpy as np
 import sympy as sp
 import cv2                      # opencv
+import math
 #import matplotlib.pyplot as plt # pyplot
 
 def get_image(clientID, sensorHandle):
@@ -20,3 +21,15 @@ def process_image(img):
     keypoints = detector.detect(thresh)
 
     return keypoints
+
+def get_nearest_keyPoint(keypoints, x, y):
+    minDistance = math.inf
+    for keyPoint in keypoints:
+        xi = np.around(keyPoint.pt[0], 3)
+        yi = np.around(keyPoint.pt[1], 3)
+        distance = math.sqrt(((x - xi) ** 2) + ((y - yi) ** 2))
+        if distance < minDistance:
+            xf = xi
+            yf = yi
+            minDistance = distance
+    return yf, xf

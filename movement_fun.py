@@ -3,6 +3,7 @@ import numpy as np
 import sim          # librería para conectar con CoppeliaSim
 import sympy as sp  # librería para cálculo simbólico
 import time
+from coppelia_fun import *
 
 def inverse_kinematics(x,y,z):
     cabGrados = 0
@@ -56,9 +57,17 @@ def move_to(clientID, list_grados):
 
 def move_home(clientID, joint1, joint2, joint3, joint4):
     retCode = sim.simxSetJointTargetPosition(clientID, joint3, 0 * np.pi / 180, sim.simx_opmode_oneshot)
-    time.sleep(0.5)
+    time.sleep(1)
     retCode = sim.simxSetJointTargetPosition(clientID, joint1, 0 * np.pi / 180, sim.simx_opmode_oneshot)
-    time.sleep(0.5)
+    time.sleep(1)
     retCode = sim.simxSetJointTargetPosition(clientID, joint2, 180 * np.pi / 180, sim.simx_opmode_oneshot)
-    time.sleep(0.5)
+    time.sleep(1)
     retCode = sim.simxSetJointTargetPosition(clientID, joint4, 0 * np.pi / 180, sim.simx_opmode_oneshot)
+
+def movement_sequence(x, y, z, joint1, joint2, joint3, joint4, clientID, grip):
+    Axis1Grados, Axis2Grados, Axis3Grados, Axis4Grados = inverse_kinematics(x, y, z)
+    sorted_degrees = sort_degrees(Axis1Grados, Axis2Grados, Axis3Grados, Axis4Grados, joint1, joint2, joint3, joint4)
+    move_to(clientID, sorted_degrees)
+    time.sleep(1)
+    gripper(clientID, grip)
+    time.sleep(1)
