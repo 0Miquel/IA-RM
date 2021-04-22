@@ -19,6 +19,7 @@ def gripper(clientID, val):
     return res
 
 def get_ids(clientID):
+    retCode, sensorHandle = sim.simxGetObjectHandle(clientID, 'Vision_sensor', sim.simx_opmode_blocking)
     retCode, grip = sim.simxGetObjectHandle(clientID, 'ROBOTIQ_85', sim.simx_opmode_blocking)
     retCode, joint1 = sim.simxGetObjectHandle(clientID, 'Joint1', sim.simx_opmode_blocking)
     retCode, joint2 = sim.simxGetObjectHandle(clientID, 'Joint2', sim.simx_opmode_blocking)
@@ -27,4 +28,4 @@ def get_ids(clientID):
     retCode, joint5 = sim.simxGetObjectHandle(clientID, 'Joint5', sim.simx_opmode_blocking)
     retCode, dummy = sim.simxGetObjectHandle(clientID, 'Dummy', sim.simx_opmode_blocking)
 
-    return grip, joint1, joint2, joint3, joint4, joint5, dummy
+    return grip, joint1, joint2, joint3, joint4, joint5, dummy, sensorHandle

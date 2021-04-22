@@ -11,32 +11,36 @@ def inverse_kinematics(x,y,z):
     m = 0.1 + 0.145  # longitud de muñequilla mm + pinza
     H = 0.2  # altura de base mm
 
-    cabRAD = cabGrados * np.pi / 180
-    Axis1 = math.atan2(y, x)
-    M = math.sqrt(pow(x, 2) + pow(y, 2))
-    xprima = M
-    yprima = z
-    Afx = math.cos(cabRAD) * m
+    try:
+        cabRAD = cabGrados * np.pi / 180
+        Axis1 = math.atan2(y, x)
+        M = math.sqrt(pow(x, 2) + pow(y, 2))
+        xprima = M
+        yprima = z
+        Afx = math.cos(cabRAD) * m
 
-    B = xprima - Afx
-    Afy = math.sin(cabRAD) * m
-    A = yprima + Afy - H
-    Hip = math.sqrt(pow(A, 2) + pow(B, 2))
-    alfa = math.atan2(A, B)
-    beta = math.acos((pow(b, 2) - pow(ab, 2) + pow(Hip, 2)) / (2 * b * Hip))
-    Axis2 = alfa + beta
-    gamma = math.acos((pow(b, 2) + pow(ab, 2) - pow(Hip, 2)) / (2 * b * ab))
-    Axis3 = gamma
-    Axis4 = 2 * np.pi - cabRAD - Axis2 - Axis3
+        B = xprima - Afx
+        Afy = math.sin(cabRAD) * m
+        A = yprima + Afy - H
+        Hip = math.sqrt(pow(A, 2) + pow(B, 2))
+        alfa = math.atan2(A, B)
+        beta = math.acos((pow(b, 2) - pow(ab, 2) + pow(Hip, 2)) / (2 * b * Hip))
+        Axis2 = alfa + beta
+        gamma = math.acos((pow(b, 2) + pow(ab, 2) - pow(Hip, 2)) / (2 * b * ab))
+        Axis3 = gamma
+        Axis4 = 2 * np.pi - cabRAD - Axis2 - Axis3
 
-    Axis1Grados = (Axis1 * 180 / np.pi)  # Giro base en Grados
-    Axis2Grados = (90 - Axis2 * 180 / np.pi)  # Giro brazo en Grados
-    Axis3Grados = (180 - Axis3 * 180 / np.pi)  # Giro antebrazo grados
-    Axis4Grados = (180 - Axis4 * 180 / np.pi)  # Giro muñequilla grados
+        Axis1Grados = (Axis1 * 180 / np.pi)  # Giro base en Grados
+        Axis2Grados = (90 - Axis2 * 180 / np.pi)  # Giro brazo en Grados
+        Axis3Grados = (180 - Axis3 * 180 / np.pi)  # Giro antebrazo grados
+        Axis4Grados = (180 - Axis4 * 180 / np.pi)  # Giro muñequilla grados
 
-    Axis2Grados = 90 + abs(90 - Axis2Grados)
-    Axis3Grados = -Axis3Grados
-    Axis4Grados = -Axis4Grados
+        Axis2Grados = 90 + abs(90 - Axis2Grados)
+        Axis3Grados = -Axis3Grados
+        Axis4Grados = -Axis4Grados
+    except:
+        print("Non reachable")
+        Axis1Grados, Axis2Grados, Axis3Grados, Axis4Grados = 0, 180, 0, 0
 
     return Axis1Grados, Axis2Grados, Axis3Grados, Axis4Grados
 
