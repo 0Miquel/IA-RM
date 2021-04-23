@@ -46,18 +46,19 @@ def inverse_kinematics(x,y,z):
         print("Non reachable")
         Axis1Grados, Axis2Grados, Axis3Grados, Axis4Grados = 0, 180, 0, 0
 
-    return Axis1Grados, Axis2Grados, Axis3Grados, Axis4Grados
+    return [Axis1Grados, Axis2Grados, Axis3Grados, Axis4Grados]
 
-def sort_degrees(Degrees, Joints):
-    list_grados = sorted(zip(Degrees,Joints), key=lambda x: x[0], reverse=True)
-    return list_grados
+def sort_degrees(degrees, joints):
+    sorted_degrees = sorted(zip(degrees,joints), key=lambda x: x[0], reverse=True)
+    return sorted_degrees
 
 def move_to(clientID, list_grados):
     for grados, joint in list_grados:
         retCode = sim.simxSetJointTargetPosition(clientID, joint, grados * np.pi / 180, sim.simx_opmode_oneshot)
         time.sleep(1)
 
-def move_home(clientID, joint1, joint2, joint3, joint4):
+def move_home(clientID, list_joints):
+    joint1, joint2, joint3, joint4 = list_joints
     retCode = sim.simxSetJointTargetPosition(clientID, joint3, 0 * np.pi / 180, sim.simx_opmode_oneshot)
     time.sleep(1)
     retCode = sim.simxSetJointTargetPosition(clientID, joint1, 0 * np.pi / 180, sim.simx_opmode_oneshot)
@@ -66,11 +67,9 @@ def move_home(clientID, joint1, joint2, joint3, joint4):
     time.sleep(1)
     retCode = sim.simxSetJointTargetPosition(clientID, joint4, 0 * np.pi / 180, sim.simx_opmode_oneshot)
 
-def movement_sequence(x, y, z, joint1, joint2, joint3, joint4, clientID, grip):
-    Axis1Grados, Axis2Grados, Axis3Grados, Axis4Grados = inverse_kinematics(x, y, z)
-    Degrees_list=[Axis1Grados, Axis2Grados, Axis3Grados, Axis4Grados]
-    Joint_list=[joint1, joint2, joint3, joint4]
-    sorted_degrees = sort_degrees(Degrees_list, Joint_list)
+def movement_sequence(x, y, z, list_joints, clientID, grip):
+    list_degrees = inverse_kinematics(x, y, z)
+    sorted_degrees = sort_degrees(list_degrees, list_joints) #list of sorted degrees with its joint
     move_to(clientID, sorted_degrees)
     time.sleep(1)
     gripper(clientID, grip)
@@ -123,4 +122,5 @@ def movement_sequenceVertical(x, y, z, joint1, joint2, joint3, joint4, clientID,
     gripper(clientID, grip)
     time.sleep(1)
 
-def alingGrip(x, y, z,)
+def alingGrip(x, y, z,):
+    pass

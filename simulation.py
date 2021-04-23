@@ -37,15 +37,16 @@ while running:
                 x = np.around(0.5 - xf * 0.5 / 512, 3)
                 y = np.around(0.5 - yf * 0.5 / 512, 3)
                 print(f"x = {x}, y = {y}")
-                movement_sequence(x, y, 0.2, joint1, joint2, joint3, joint4, clientID, 0)
-                movement_sequence(x, y, 0.02, joint1, joint2, joint3, joint4, clientID, 1)
-                #move_home(clientID, joint1, joint2, joint3, joint4)
+
+                list_joints = [joint1, joint2, joint3, joint4]
+                movement_sequence(x, y, 0.2, list_joints, clientID, 0)
+                movement_sequence(x, y, 0.02, list_joints, clientID, 1)
                 object_grabbed = True
             elif object_grabbed:
                 x = np.around(0.5 - x * 0.5 / 512, 3)
                 y = np.around(0.5 - y * 0.5 / 512, 3)
-                movement_sequence(x, y, 0.2, joint1, joint2, joint3, joint4, clientID, 0)
-                move_home(clientID, joint1, joint2, joint3, joint4)
+                movement_sequence(x, y, 0.2, list_joints, clientID, 0)
+                move_home(clientID, list_joints)
                 object_grabbed = False
 
     pygame.display.update()
