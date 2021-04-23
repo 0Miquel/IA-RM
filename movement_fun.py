@@ -5,6 +5,9 @@ import sympy as sp  # librería para cálculo simbólico
 import time
 from coppelia_fun import *
 
+
+
+
 def inverse_kinematics(x,y,z):
     cabGrados = 0
     b = 0.2  # longitud de brazo mm
@@ -45,9 +48,8 @@ def inverse_kinematics(x,y,z):
 
     return Axis1Grados, Axis2Grados, Axis3Grados, Axis4Grados
 
-def sort_degrees(Axis1Grados, Axis2Grados, Axis3Grados, Axis4Grados, joint1, joint2, joint3, joint4):
-    list_grados = [(Axis1Grados, joint1), (Axis2Grados, joint2), (Axis3Grados, joint3), (Axis4Grados, joint4)]
-    list_grados = sorted(list_grados, key=lambda x: x[0], reverse=True)
+def sort_degrees(Degrees, Joints):
+    list_grados = sorted(zip(Degrees,Joints), key=lambda x: x[0], reverse=True)
     return list_grados
 
 def move_to(clientID, list_grados):
@@ -66,8 +68,59 @@ def move_home(clientID, joint1, joint2, joint3, joint4):
 
 def movement_sequence(x, y, z, joint1, joint2, joint3, joint4, clientID, grip):
     Axis1Grados, Axis2Grados, Axis3Grados, Axis4Grados = inverse_kinematics(x, y, z)
-    sorted_degrees = sort_degrees(Axis1Grados, Axis2Grados, Axis3Grados, Axis4Grados, joint1, joint2, joint3, joint4)
+    Degrees_list=[Axis1Grados, Axis2Grados, Axis3Grados, Axis4Grados]
+    Joint_list=[joint1, joint2, joint3, joint4]
+    sorted_degrees = sort_degrees(Degrees_list, Joint_list)
     move_to(clientID, sorted_degrees)
     time.sleep(1)
     gripper(clientID, grip)
     time.sleep(1)
+
+
+#vertical movement set
+
+def inverse_kinematicsVertical(x,y,z):
+    cabGrados = 0
+    b = 0.2  # longitud de brazo mm
+    ab = 0.2  # longitud de antebrazo mm
+    H = 0.2  # altura de base mm
+
+    try:
+        Axis1 = math.atan2(y, x)
+        xprima = math.sqrt(pow(x, 2) + pow(y, 2))
+        yprima = z
+        B = xprima
+        A = z - H;
+
+        Hip = math.sqrt(pow(A, 2) + pow(B, 2))
+        alfa = math.atan2(A, B)
+        beta = math.acos((pow(b, 2) - pow(ab, 2) + pow(Hip, 2)) / (2 * b * Hip))
+        Axis2 = alfa + beta
+        gamma = math.acos((pow(b, 2) + pow(ab, 2) - pow(Hip, 2)) / (2 * b * ab))
+        Axis3 = gamma
+
+        Axis1Grados = (Axis1 * 180 / np.pi)  # Giro base en Grados
+        Axis2Grados = (90 - Axis2 * 180 / np.pi)  # Giro brazo en Grados
+        Axis3Grados = (180 - Axis3 * 180 / np.pi)  # Giro antebrazo grados
+
+        Axis2Grados = 90 + abs(90 - Axis2Grados)
+        Axis3Grados = -Axis3Grados
+    except:
+        print("Non reachable")
+        Axis1Grados, Axis2Grados, Axis3Grados,  = 0, 180, 0
+
+    return Axis1Grados, Axis2Grados, Axis3Grados
+
+def movement_sequenceVertical(x, y, z, joint1, joint2, joint3, joint4, clientID, grip):
+    Axis1Grados, Axis2Grados, Axis3Grados = inverse_kinematicsVertical(x, y, z)
+    Degrees_list=[Axis1Grados, Axis2Grados, Axis3Grados]
+    Joint_list=[joint1, joint2, joint3]
+    sorted_degrees = sort_degrees(Degrees_list, Joint_list)
+    move_to(clientID, sorted_degrees)
+    time.sleep(1)
+    #mover joint4
+    time.sleep(1)
+    gripper(clientID, grip)
+    time.sleep(1)
+
+def alingGrip(x, y, z,)
