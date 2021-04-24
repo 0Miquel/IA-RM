@@ -108,13 +108,11 @@ def inverse_kinematicsVertical(x,y,z):
         print("Non reachable")
         Axis1Grados, Axis2Grados, Axis3Grados,  = 0, 180, 0
 
-    return Axis1Grados, Axis2Grados, Axis3Grados
+    return [Axis1Grados, Axis2Grados, Axis3Grados]
 
-def movement_sequenceVertical(x, y, z, joint1, joint2, joint3, joint4, clientID, grip):
-    Axis1Grados, Axis2Grados, Axis3Grados = inverse_kinematicsVertical(x, y, z)
-    Degrees_list=[Axis1Grados, Axis2Grados, Axis3Grados]
-    Joint_list=[joint1, joint2, joint3]
-    sorted_degrees = sort_degrees(Degrees_list, Joint_list)
+def movement_sequenceVertical(x, y, z, list_joints, clientID, grip):
+    list_degrees = inverse_kinematicsVertical(x, y, z)
+    sorted_degrees = sort_degrees(list_degrees, list_joints[:-1]) #list of sorted degrees with its joint
     move_to(clientID, sorted_degrees)
     time.sleep(1)
     #mover joint4
