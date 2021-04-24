@@ -124,9 +124,14 @@ def movement_sequenceVertical(x, y, z, list_joints, clientID, grip, angle0, obje
             angle2 = -angle2 # queremos que elangulo siempre sea negativo (Provisional)
         retCode = sim.simxSetJointTargetPosition(clientID, list_joints[-1], angle2 * np.pi / 180, sim.simx_opmode_oneshot)
         time.sleep(1)
+        gripper(clientID, grip)
+        time.sleep(1)
+        return angle1
+    time.sleep(1)
     gripper(clientID, grip)
     time.sleep(1)
-    return angle1
+    return 0
+
 
 def alingGrip(clientID, x, y):
     # Posicion keypoint

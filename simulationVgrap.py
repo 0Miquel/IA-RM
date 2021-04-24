@@ -9,6 +9,7 @@ import math
 
 clientID = connect(19999)
 grip, joint1, joint2, joint3, joint4, joint5, dummy, sensorHandle = get_ids(clientID)
+list_joints = [joint1, joint2, joint3, joint4]
 
 pygame.init()
 
@@ -37,14 +38,13 @@ while running:
                 x = np.around(0.5 - xf * 0.5 / 512, 3)
                 y = np.around(0.5 - yf * 0.5 / 512, 3)
                 print(f"x = {x}, y = {y}")
-                list_joints = [joint1, joint2, joint3, joint4]
+
                 angle0 = movement_sequenceVertical(x, y, 0.08, list_joints, clientID, 0, 0, object_grabbed) #posicionamiento
                 movement_sequenceVertical(x, y, 0.02, list_joints, clientID, 1, angle0+7,object_grabbed) #ajuste (suma provisional)
                 object_grabbed = True
             elif object_grabbed:
                 x = np.around(0.5 - x * 0.5 / 512, 3)
                 y = np.around(0.5 - y * 0.5 / 512, 3)
-                list_joints = [joint1, joint2, joint3, joint4]
                 movement_sequenceVertical(x, y, 0.08, list_joints, clientID, 0, 0, object_grabbed) #colocación
                 move_home(clientID, list_joints)
                 object_grabbed = False

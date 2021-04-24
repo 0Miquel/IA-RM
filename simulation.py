@@ -9,6 +9,7 @@ import math
 
 clientID = connect(19999)
 grip, joint1, joint2, joint3, joint4, joint5, dummy, sensorHandle = get_ids(clientID)
+list_joints = [joint1, joint2, joint3, joint4]
 
 pygame.init()
 
@@ -38,7 +39,6 @@ while running:
                 y = np.around(0.5 - yf * 0.5 / 512, 3)
                 print(f"x = {x}, y = {y}")
 
-                list_joints = [joint1, joint2, joint3, joint4]
                 movement_sequence(x, y, 0.2, list_joints, clientID, 0)
                 movement_sequence(x, y, 0.02, list_joints, clientID, 1)
                 object_grabbed = True
