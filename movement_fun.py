@@ -82,6 +82,7 @@ def inverse_kinematicsVertical(x,y,z):
     cabGrados = 0
     b = 0.2  # longitud de brazo mm
     ab = 0.2  # longitud de antebrazo mm
+    m = 0.1 + 0.145  # longitud de muñequilla mm + pinza
     H = 0.2  # altura de base mm
 
     try:
@@ -89,7 +90,7 @@ def inverse_kinematicsVertical(x,y,z):
         xprima = math.sqrt(pow(x, 2) + pow(y, 2))
         yprima = z
         B = xprima
-        A = z - H;
+        A = z - H + m; # Suma de la longitud de la muñequilla+pinza
 
         Hip = math.sqrt(pow(A, 2) + pow(B, 2))
         alfa = math.atan2(A, B)
@@ -110,15 +111,36 @@ def inverse_kinematicsVertical(x,y,z):
 
     return [Axis1Grados, Axis2Grados, Axis3Grados]
 
-def movement_sequenceVertical(x, y, z, list_joints, clientID, grip):
+def movement_sequenceVertical(x, y, z, list_joints, clientID, grip, angle0, object_grabbed):
     list_degrees = inverse_kinematicsVertical(x, y, z)
     sorted_degrees = sort_degrees(list_degrees, list_joints[:-1]) #list of sorted degrees with its joint
     move_to(clientID, sorted_degrees)
     time.sleep(1)
     #mover joint4
-    time.sleep(1)
+    if (object_grabbed==False): # Alineamiento solo para coger el objeto
+        angle1 = alingGrip(clientID, x,y)
+        angle2 = angle0-angle1 #desde el angulo en el que estamos hasta el angulo que queremos (Provisional)
+        if angle2>0:
+            angle2 = -angle2 # queremos que elangulo siempre sea negativo (Provisional)
+        retCode = sim.simxSetJointTargetPosition(clientID, list_joints[-1], angle2 * np.pi / 180, sim.simx_opmode_oneshot)
+        time.sleep(1)
     gripper(clientID, grip)
     time.sleep(1)
+    return angle1
 
-def alingGrip(x, y, z,):
-    pass
+def alingGrip(clientID, x, y):
+    # Posicion keypoint
+    x_k = x
+    y_k = y
+
+    retCode, Dummy = sim.simxGetObjectHandle(clientID, 'Dummy', sim.simx_opmode_blocking)
+    retCode, pos = sim.simxGetObjectPosition(clientID, Dummy, -1, sim.simx_opmode_blocking) # Calculamos la posición del Dummy para la trigonometría
+    print(pos)
+    xD = pos[0]
+    yD = pos[1]
+
+    dist = math.sqrt(((x_k - xD) ** 2) + ((y_k - yD) ** 2))
+    angle = math.sin(dist / 0.245) * 90 # distancia del Dummy hasta el Keypoint / distancia del joint hasta la pinza
+    print(angle)
+
+    return angle
