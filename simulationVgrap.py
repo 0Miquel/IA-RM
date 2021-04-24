@@ -31,20 +31,22 @@ while running:
         if event.type == pygame.MOUSEBUTTONUP:
             y, x = pygame.mouse.get_pos()
             if thresh[y, x] == 0 and not object_grabbed:
-                detector=cv2.SimpleBlobDetector_create() #Version antigua !!
+                detector=cv2.SimpleBlobDetector_create()
                 keypoints=detector.detect(thresh)
                 yf, xf = get_nearest_keyPoint(keypoints, x, y)
                 x = np.around(0.5 - xf * 0.5 / 512, 3)
                 y = np.around(0.5 - yf * 0.5 / 512, 3)
                 print(f"x = {x}, y = {y}")
-                movement_sequenceVertical(x, y, 0.3, joint1, joint2, joint3, joint4, clientID, 0)
-                #move_home(clientID, joint1, joint2, joint3, joint4)
+                list_joints = [joint1, joint2, joint3, joint4]
+                angle0 = movement_sequenceVertical(x, y, 0.08, list_joints, clientID, 0, 0, object_grabbed) #posicionamiento
+                movement_sequenceVertical(x, y, 0.02, list_joints, clientID, 1, angle0+7,object_grabbed) #ajuste (suma provisional)
                 object_grabbed = True
             elif object_grabbed:
                 x = np.around(0.5 - x * 0.5 / 512, 3)
                 y = np.around(0.5 - y * 0.5 / 512, 3)
-                movement_sequence(x, y, 0.2, joint1, joint2, joint3, joint4, clientID, 0)
-                move_home(clientID, joint1, joint2, joint3, joint4)
+                list_joints = [joint1, joint2, joint3, joint4]
+                movement_sequenceVertical(x, y, 0.08, list_joints, clientID, 0, 0, object_grabbed) #colocación
+                move_home(clientID, list_joints)
                 object_grabbed = False
 
     pygame.display.update()
