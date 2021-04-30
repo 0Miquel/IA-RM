@@ -1,6 +1,4 @@
 import pygame
-import sys
-sys.path.append("../functions")
 from visualize_fun import *
 from coppelia_fun import *
 from movement_fun import *
