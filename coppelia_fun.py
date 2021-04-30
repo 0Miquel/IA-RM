@@ -2,23 +2,34 @@ import sim          # librería para conectar con CoppeliaSim
 import sympy as sp  # librería para cálculo simbólico
 
 def connect(port):
-# Establece la conexión a VREP
-# port debe coincidir con el puerto de conexión en VREP
-# retorna el número de cliente o -1 si no puede establecer conexión
+    """
+    Realiza la connexión a la API de Coppelia
+    :param port:
+    :return: ID del cliente de la API de Coppelia
+    """
     sim.simxFinish(-1) # just in case, close all opened connections
     clientID=sim.simxStart('127.0.0.1',port,True,True,2000,5) # Conectarse
     if clientID == 0: print("conectado a", port)
     else: print("no se pudo conectar")
     return clientID
 
-# Función para abrir o cerrar la pinza remotamente:
+
 def gripper(clientID, val):
-# función que acciona el efector final remotamente
-# val es Int con valor 0 ó 1 para desactivar o activar el actuador final. res,retInts,retFloats,retStrings,retBuffer=sim.simxCallScriptFunction(clientID,
+    """
+    Acciona el efector de la pinza remotamente
+    :param clientID: Coppelia ID
+    :param val: Acción a realizar sobre la pinza, 0 = abrir, 1 = cerrar
+    :return: Codigo del resultado, 0 = satisfactorio
+    """
     res,retInts,retFloats,retStrings,retBuffer=sim.simxCallScriptFunction(clientID, "ROBOTIQ_85", sim.sim_scripttype_childscript,"gripper",[val],[],[],"", sim.simx_opmode_blocking)
     return res
 
 def get_ids(clientID):
+    """
+    Devuelve los IDs que encontramos en nuestra escena de Coppelia
+    :param clientID: Coppelia ID
+    :return: IDs de cada uno de los handlers que encontramos en nuestra escena
+    """
     retCode, sensorHandle = sim.simxGetObjectHandle(clientID, 'Vision_sensor', sim.simx_opmode_blocking)
     retCode, grip = sim.simxGetObjectHandle(clientID, 'ROBOTIQ_85', sim.simx_opmode_blocking)
     retCode, joint1 = sim.simxGetObjectHandle(clientID, 'Joint1', sim.simx_opmode_blocking)

@@ -20,10 +20,8 @@ running = True
 
 while running:
     image = get_image(clientID, sensorHandle)
-    img_GRAY = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-    ret, thresh = cv2.threshold(img_GRAY,150,255,cv2.THRESH_BINARY)
-    image = pygame.surfarray.make_surface(image)
-    screen.blit(image, (0, 0))
+    surface = pygame.surfarray.make_surface(image)
+    screen.blit(surface, (0, 0))
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -31,13 +29,13 @@ while running:
 
         if event.type == pygame.MOUSEBUTTONUP:
             y, x = pygame.mouse.get_pos()
-            if thresh[y, x] == 0 and not object_grabbed:
-                detector=cv2.SimpleBlobDetector_create()
-                keypoints=detector.detect(thresh)
-                yf, xf = get_nearest_keyPoint(keypoints, x, y)
+            n_objects, im_labels = get_objects(image)
+            if im_labels[y, x] != 0 and not object_grabbed:
+                object_label = im_labels[y, x]
+                yf, xf, orientation = get_centroids_orientation(object_label, im_labels)
                 x = np.around(0.5 - xf * 0.5 / 512, 3)
                 y = np.around(0.5 - yf * 0.5 / 512, 3)
-                print(f"x = {x}, y = {y}")
+                print(f"x = {x}, y = {y}, orientation = {orientation}")
 
                 angle0 = movement_sequenceVertical(x, y, 0.08, list_joints, clientID, 0, 0, object_grabbed) #posicionamiento
                 movement_sequenceVertical(x, y, 0.02, list_joints, clientID, 1, angle0+7,object_grabbed) #ajuste (suma provisional)
