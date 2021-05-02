@@ -111,8 +111,12 @@ def inverse_kinematicsVertical(x,y,z):
 
     return [Axis1Grados, Axis2Grados, Axis3Grados]
 
+def move_joint5(clientID, joint5, orientation, correction_degree):
+    retCode = sim.simxSetJointTargetPosition(clientID, joint5,(90*np.pi/180)-orientation-(correction_degree*np.pi/180), sim.simx_opmode_oneshot)
+
 def movement_sequenceVertical(x, y, z, list_joints, clientID, grip, angle0, object_grabbed):
     list_degrees = inverse_kinematicsVertical(x, y, z)
+    degree_joint5 = list_degrees[0]
     sorted_degrees = sort_degrees(list_degrees, list_joints[:-1]) #list of sorted degrees with its joint
     move_to(clientID, sorted_degrees)
     time.sleep(1)
@@ -126,11 +130,12 @@ def movement_sequenceVertical(x, y, z, list_joints, clientID, grip, angle0, obje
         time.sleep(1)
         gripper(clientID, grip)
         time.sleep(1)
-        return angle1
+
+        return angle1, degree_joint5
     time.sleep(1)
     gripper(clientID, grip)
     time.sleep(1)
-    return 0
+    return 0, 0
 
 
 def alingGrip(clientID, x, y):

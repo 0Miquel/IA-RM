@@ -28,18 +28,21 @@ while running:
             n_objects, im_labels = get_objects(image)
             if im_labels[y, x] != 0 and not object_grabbed:
                 object_label = im_labels[y, x]
+                print(x,y)
                 yf, xf, orientation = get_centroids_orientation(object_label, im_labels)
-                x = np.around(0.5 - xf * 0.5 / 512, 3)
-                y = np.around(0.5 - yf * 0.5 / 512, 3)
-                print(f"x = {x}, y = {y}, orientation = {orientation}")
+                xf = np.around(0.5 - xf * 0.5 / 512, 3)
+                yf = np.around(0.5 - yf * 0.5 / 512, 3)
+                print(f"x = {xf}, y = {yf}, orientation = {orientation}")
 
-                angle0 = movement_sequenceVertical(x, y, 0.08, list_joints, clientID, 0, 0, object_grabbed) #posicionamiento
-                movement_sequenceVertical(x, y, 0.02, list_joints, clientID, 1, angle0+7,object_grabbed) #ajuste (suma provisional)
+                angle0, correction_degree = movement_sequenceVertical(xf, yf, 0.1, list_joints, clientID, 0, 0, object_grabbed) #posicionamiento
+                move_joint5(clientID, joint5, orientation, correction_degree)
+                movement_sequenceVertical(xf, yf, 0.02, list_joints, clientID, 1, angle0+7,object_grabbed) #ajuste (suma provisional)
                 object_grabbed = True
             elif object_grabbed:
-                x = np.around(0.5 - x * 0.5 / 512, 3)
-                y = np.around(0.5 - y * 0.5 / 512, 3)
-                movement_sequenceVertical(x, y, 0.08, list_joints, clientID, 0, 0, object_grabbed) #colocación
+                movement_sequenceVertical(xf, yf, 0.08, list_joints, clientID, 1, 0,object_grabbed)  # ajuste (suma provisional)
+                xf = np.around(0.5 - x * 0.5 / 512, 3)
+                yf = np.around(0.5 - y * 0.5 / 512, 3)
+                movement_sequenceVertical(xf, yf, 0.08, list_joints, clientID, 0, 0, object_grabbed) #colocación
                 move_home(clientID, list_joints)
                 object_grabbed = False
 
