@@ -55,7 +55,7 @@ def sort_degrees(degrees, joints):
 def move_to(clientID, list_grados):
     for grados, joint in list_grados:
         retCode = sim.simxSetJointTargetPosition(clientID, joint, grados * np.pi / 180, sim.simx_opmode_oneshot)
-        time.sleep(1)
+        time.sleep(0.3)
 
 def move_home(clientID, list_joints):
     joint1, joint2, joint3, joint4 = list_joints
@@ -105,52 +105,52 @@ def inverse_kinematicsVertical(x,y,z):
 
         Axis2Grados = 90 + abs(90 - Axis2Grados)
         Axis3Grados = -Axis3Grados
+        reachable = True
     except:
         print("Non reachable")
         Axis1Grados, Axis2Grados, Axis3Grados,  = 0, 180, 0
+        reachable = False
 
-    return [Axis1Grados, Axis2Grados, Axis3Grados]
+    return [Axis1Grados, Axis2Grados, Axis3Grados], reachable
 
 def move_joint5(clientID, joint5, orientation, correction_degree):
     retCode = sim.simxSetJointTargetPosition(clientID, joint5,(90*np.pi/180)-orientation-(correction_degree*np.pi/180), sim.simx_opmode_oneshot)
 
 def movement_sequenceVertical(x, y, z, list_joints, clientID, grip, angle0, object_grabbed):
-    list_degrees = inverse_kinematicsVertical(x, y, z)
-    degree_joint5 = list_degrees[0]
-    sorted_degrees = sort_degrees(list_degrees, list_joints[:-1]) #list of sorted degrees with its joint
-    move_to(clientID, sorted_degrees)
-    time.sleep(1)
-    #mover joint4
-    if (object_grabbed==False): # Alineamiento solo para coger el objeto
-        angle1 = alingGrip(clientID, x,y)
-        angle2 = angle0-angle1 #desde el angulo en el que estamos hasta el angulo que queremos (Provisional)
-        if angle2>0:
-            angle2 = -angle2 # queremos que elangulo siempre sea negativo (Provisional)
-        retCode = sim.simxSetJointTargetPosition(clientID, list_joints[-1], angle2 * np.pi / 180, sim.simx_opmode_oneshot)
-        time.sleep(1)
+    list_degrees, reachable = inverse_kinematicsVertical(x, y, z)
+    angle2 = 0
+    if reachable:
+        sorted_degrees = sort_degrees(list_degrees, list_joints[:-1]) #list of sorted degrees with its joint
+        move_to(clientID, sorted_degrees)
+        time.sleep(0.4)
+        #move joint4
+        if not object_grabbed: # Alineamiento solo para coger el objeto
+            angle1 = alingGrip(clientID, x,y, list_joints[-1])
+            angle2 = angle0-angle1 #desde el angulo en el que estamos hasta el angulo que queremos (Provisional)
+            if angle2>0:
+                angle2 = -angle2 # queremos que el angulo siempre sea negativo (Provisional)
+            retCode = sim.simxSetJointTargetPosition(clientID, list_joints[-1], angle2, sim.simx_opmode_oneshot)
+
+        time.sleep(0.1)
         gripper(clientID, grip)
-        time.sleep(1)
+        time.sleep(0.2)
+    return abs(angle2), list_degrees[0], reachable
 
-        return angle1, degree_joint5
-    time.sleep(1)
-    gripper(clientID, grip)
-    time.sleep(1)
-    return 0, 0
-
-
-def alingGrip(clientID, x, y):
-    # Posicion keypoint
-    x_k = x
-    y_k = y
-
+def alingGrip(clientID, x, y, joint4):
+    z = 0.02 #altura del objeto
     retCode, Dummy = sim.simxGetObjectHandle(clientID, 'Dummy', sim.simx_opmode_blocking)
-    retCode, pos = sim.simxGetObjectPosition(clientID, Dummy, -1, sim.simx_opmode_blocking) # Calculamos la posición del Dummy para la trigonometría
-    print(pos)
-    xD = pos[0]
-    yD = pos[1]
+    retCode, pos = sim.simxGetObjectPosition(clientID, Dummy, -1, sim.simx_opmode_blocking)  # Calculamos la posición del Dummy para la trigonometría
 
-    dist = math.sqrt(((x_k - xD) ** 2) + ((y_k - yD) ** 2))
-    angle = math.sin(dist / 0.245) * 90 # distancia del Dummy hasta el Keypoint / distancia del joint hasta la pinza
-    print(angle)
+    retCode, pos2 = sim.simxGetObjectPosition(clientID, joint4, -1, sim.simx_opmode_blocking)
 
+    dist = math.sqrt(((x - pos[0])**  2) + ((y - pos[1]) ** 2) + ((z - pos[2])** 2))  # distancia del Dummy hasta el Keypoint
+    dist2 = math.sqrt(((x - pos2[0])**  2) + ((y - pos2[1])**  2) + ((z - pos2[2])**  2))  # distancia de joint4 a keypoint
+    #ley del coseno
+    div = (0.245 * 0.245 + dist2 * dist2 - dist * dist) / (2 * 0.245 * dist2)
+    if div < -1.0:
+        div = -1.0
+    if div > 1.0:
+        div = 1.0
+
+    angle = math.acos(div)
     return angle
