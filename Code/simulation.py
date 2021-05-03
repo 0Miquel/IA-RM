@@ -35,6 +35,8 @@ while running:
                 print(f"x = {x}, y = {y}, orientation = {orientation}")
 
                 movement_sequence(x, y, 0.2, list_joints, clientID, 0)
+                for z in range(9,2,-1):
+                     movement_sequence(x, y, z*0.02, list_joints, clientID, 0)
                 movement_sequence(x, y, 0.02, list_joints, clientID, 1)
                 object_grabbed = True
             elif object_grabbed:
