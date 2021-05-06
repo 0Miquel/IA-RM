@@ -116,28 +116,29 @@ def inverse_kinematicsVertical(x,y,z):
 def move_joint5(clientID, joint5, orientation, correction_degree):
     retCode = sim.simxSetJointTargetPosition(clientID, joint5,(90*np.pi/180)-orientation-(correction_degree*np.pi/180), sim.simx_opmode_oneshot)
 
-def movement_sequenceVertical(x, y, z, list_joints, clientID, grip, angle0, object_grabbed):
+def movement_sequenceVertical(x, y, z, list_joints, clientID, angle0, object_grabbed):
     list_degrees, reachable = inverse_kinematicsVertical(x, y, z)
     angle2 = 0
     if reachable:
         sorted_degrees = sort_degrees(list_degrees, list_joints[:-1]) #list of sorted degrees with its joint
         move_to(clientID, sorted_degrees)
-        time.sleep(0.4)
+        time.sleep(0.2)
         #move joint4
-        if not object_grabbed: # Alineamiento solo para coger el objeto
-            angle1 = alingGrip(clientID, x,y, list_joints[-1])
+        #if not object_grabbed: # Alineamiento solo para coger el objeto
+        angle1 = alingGrip(clientID, x,y, list_joints[-1])
+        if not object_grabbed:
             angle2 = angle0-angle1 #desde el angulo en el que estamos hasta el angulo que queremos (Provisional)
-            if angle2>0:
-                angle2 = -angle2 # queremos que el angulo siempre sea negativo (Provisional)
-            retCode = sim.simxSetJointTargetPosition(clientID, list_joints[-1], angle2, sim.simx_opmode_oneshot)
+        else:
+            angle2 = angle0 + angle1
+        if angle2>0:
+            angle2 = -angle2 # queremos que el angulo siempre sea negativo (Provisional)
+        retCode = sim.simxSetJointTargetPosition(clientID, list_joints[-1], angle2, sim.simx_opmode_oneshot)
 
-        time.sleep(0.1)
-        gripper(clientID, grip)
         time.sleep(0.2)
     return abs(angle2), list_degrees[0], reachable
 
 def alingGrip(clientID, x, y, joint4):
-    z = 0.02 #altura del objeto
+    z = 0.52 #altura del objeto
     retCode, Dummy = sim.simxGetObjectHandle(clientID, 'Dummy', sim.simx_opmode_blocking)
     retCode, pos = sim.simxGetObjectPosition(clientID, Dummy, -1, sim.simx_opmode_blocking)  # Calculamos la posición del Dummy para la trigonometría
 
