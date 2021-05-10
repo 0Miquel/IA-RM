@@ -33,23 +33,31 @@ while running:
                 yf = np.around(0.5 - yf * 0.5 / 512, 3)
                 print(f"x = {xf}, y = {yf}, orientation = {orientation}, object_label = {object_label}")
 
-                angle0, correction_degree, reachable = movement_sequenceVertical(xf, yf, 0.1, list_joints, clientID, 0, object_grabbed) #posicionamiento
+                correction_degree, reachable = movement_sequenceVertical(xf, yf, 0.1, list_joints, clientID)
                 if reachable:
+                    angle0 = alignGrip(clientID, xf, yf, joint4, 0)
                     move_joint5(clientID, joint5, orientation, correction_degree)
                     for z in range(9,1,-1):
+                        zf = z
                         sensor_distance, object_handler = get_sensor_distance(clientID, psensor)
                         if sensor_distance < 0.03:
                             break
-                        angle0, _, reachable = movement_sequenceVertical(xf, yf, z*0.01, list_joints, clientID, angle0, object_grabbed)  # posicionamiento
+                        _, reachable = movement_sequenceVertical(xf, yf, z*0.01, list_joints, clientID)
+                        angle0 = alignGrip(clientID,xf, yf, joint4, angle0)
                     gripper(clientID, 1, object_handler)
                     object_grabbed = True
+
             elif object_grabbed:
-                angle0,_,_=movement_sequenceVertical(xf, yf, 0.2, list_joints, clientID, angle0,object_grabbed)  # ajuste (suma provisional)
+                _, reachable = movement_sequenceVertical(xf, yf, 0.2, list_joints, clientID)
                 xf = np.around(0.5 - x * 0.5 / 512, 3)
                 yf = np.around(0.5 - y * 0.5 / 512, 3)
                 print(f"x = {xf}, y = {yf}")
-                _, _, reachable = movement_sequenceVertical(xf, yf, 0.1, list_joints, clientID, angle0, object_grabbed) #colocación
+                _, reachable = movement_sequenceVertical(xf, yf, 0.2, list_joints, clientID)
                 if reachable:
+                    angle0 = alignGrip(clientID, xf, yf, joint4, angle0)
+                    for z in range(19, zf, -1):
+                        _, reachable = movement_sequenceVertical(xf, yf, z*0.01, list_joints, clientID)
+                        angle0 = alignGrip(clientID, xf, yf, joint4, angle0)
                     gripper(clientID, 0, object_handler)
                     move_home(clientID, list_joints)
                     object_grabbed = False
