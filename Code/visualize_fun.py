@@ -24,7 +24,7 @@ def get_objects(image):
     :return: Número de objetos presentes y imagen con los objetos etiquetados
     """
     img_GRAY = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-    ret, im_bin = cv2.threshold(img_GRAY, 150, 255, cv2.THRESH_BINARY)
+    ret, im_bin = cv2.threshold(img_GRAY, 240, 255, cv2.THRESH_BINARY)
     inv_im = cv2.bitwise_not(im_bin)
     n_labels, im_labels = cv2.connectedComponents(inv_im)
     return n_labels, im_labels

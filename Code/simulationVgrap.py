@@ -38,13 +38,13 @@ while running:
                     move_joint5(clientID, joint5, orientation, correction_degree)
                     for z in range(9,1,-1):
                         sensor_distance, object_handler = get_sensor_distance(clientID, psensor)
-                        if sensor_distance < 0.04:
+                        if sensor_distance < 0.03:
                             break
                         angle0, _, reachable = movement_sequenceVertical(xf, yf, z*0.01, list_joints, clientID, angle0, object_grabbed)  # posicionamiento
                     gripper(clientID, 1, object_handler)
                     object_grabbed = True
             elif object_grabbed:
-                angle0,_,_=movement_sequenceVertical(xf, yf, 0.1, list_joints, clientID, angle0,object_grabbed)  # ajuste (suma provisional)
+                angle0,_,_=movement_sequenceVertical(xf, yf, 0.2, list_joints, clientID, angle0,object_grabbed)  # ajuste (suma provisional)
                 xf = np.around(0.5 - x * 0.5 / 512, 3)
                 yf = np.around(0.5 - y * 0.5 / 512, 3)
                 print(f"x = {xf}, y = {yf}")
