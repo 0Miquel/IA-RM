@@ -23,7 +23,7 @@ def hello_world():
 def image():
     return send_file('1.png', mimetype='image/png')
 
-@app.route('/getObject')
+@app.route('/getObject', methods=['GET','POST'])
 def getObject():
     response = jsonify(res="ok")
     content = request.get_json()
@@ -33,7 +33,7 @@ def getObject():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-@app.route('/placeObject')
+@app.route('/placeObject', methods=['GET','POST'])
 def placeObject():
     response = jsonify(res="ok")
     content = request.get_json()
