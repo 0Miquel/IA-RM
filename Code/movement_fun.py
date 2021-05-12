@@ -55,7 +55,7 @@ def sort_degrees(degrees, joints):
 def move_to(clientID, list_grados):
     for grados, joint in list_grados:
         retCode = sim.simxSetJointTargetPosition(clientID, joint, grados * np.pi / 180, sim.simx_opmode_oneshot)
-        time.sleep(0.3)
+        #time.sleep(0.3)
 
 def move_home(clientID, list_joints):
     joint1, joint2, joint3, joint4 = list_joints
@@ -122,7 +122,7 @@ def movement_sequenceVertical(x, y, z, list_joints, clientID):
     if reachable:
         sorted_degrees = sort_degrees(list_degrees, list_joints[:-1])  # list of sorted degrees with its joint
         move_to(clientID, sorted_degrees)
-        time.sleep(0.3)
+        #time.sleep(0.3)
     return correction_degree, reachable
 
 def alignGrip(clientID, x, y, joint4, angle0):

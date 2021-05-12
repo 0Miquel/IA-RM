@@ -34,9 +34,11 @@ while running:
                 print(f"x = {xf}, y = {yf}, orientation = {orientation}, object_label = {object_label}")
 
                 correction_degree, reachable = movement_sequenceVertical(xf, yf, 0.1, list_joints, clientID)
+                time.sleep(1)
                 if reachable:
                     angle0 = alignGrip(clientID, xf, yf, joint4, 0)
                     move_joint5(clientID, joint5, orientation, correction_degree)
+                    time.sleep(0.5)
                     for z in range(9,1,-1):
                         zf = z
                         sensor_distance, object_handler = get_sensor_distance(clientID, psensor)
@@ -49,16 +51,21 @@ while running:
 
             elif object_grabbed:
                 _, reachable = movement_sequenceVertical(xf, yf, 0.2, list_joints, clientID)
+                time.sleep(0.5)
                 xf = np.around(0.5 - x * 0.5 / 512, 3)
                 yf = np.around(0.5 - y * 0.5 / 512, 3)
                 print(f"x = {xf}, y = {yf}")
                 _, reachable = movement_sequenceVertical(xf, yf, 0.2, list_joints, clientID)
+                time.sleep(0.5)
                 if reachable:
                     angle0 = alignGrip(clientID, xf, yf, joint4, angle0)
                     for z in range(19, zf, -1):
                         _, reachable = movement_sequenceVertical(xf, yf, z*0.01, list_joints, clientID)
                         angle0 = alignGrip(clientID, xf, yf, joint4, angle0)
                     gripper(clientID, 0, object_handler)
+                    time.sleep(0.5)
+                    movement_sequenceVertical(xf, yf, 0.1, list_joints, clientID)
+                    time.sleep(0.5)
                     move_home(clientID, list_joints)
                     object_grabbed = False
 

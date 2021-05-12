@@ -15,6 +15,7 @@ def get_image(clientID, sensorHandle):
     retCode, resolution, image = sim.simxGetVisionSensorImage(clientID, sensorHandle, 0, sim.simx_opmode_oneshot_wait)
     img = np.array(image, dtype=np.uint8)
     img.resize([resolution[1], resolution[0], 3])
+    #cv2.imwrite("test.png", cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
     return img
 
 def get_objects(image):
@@ -36,9 +37,11 @@ def get_centroids_orientation(object_label, im_labels):
     :param im_labels: Imagen con los objetos etiquetados
     :return: Coordenadas y orientación del centroide
     """
-    props = regionprops_table(im_labels, properties=('centroid', 'orientation'))
+    props = regionprops_table(im_labels, properties=('centroid', 'orientation','major_axis_length','minor_axis_length'))
     centroid_x = props['centroid-0'][object_label - 1]
     centroid_y = props['centroid-1'][object_label - 1]
     orientation = props['orientation'][object_label - 1]
+    #major_axis = props['major_axis_length'][object_label - 1]
+    #minor_axis = props['minor_axis_length'][object_label - 1]
     return centroid_x, centroid_y, orientation
 
