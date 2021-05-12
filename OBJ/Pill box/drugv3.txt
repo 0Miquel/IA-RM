@@ -1,0 +1,18 @@
+Allplan XML Version 1.002
+Save selected FALSE
+Triangulate FALSE
+Color FALSE
+Optimize TRUE 0.01
+Clear degenerated polygons TRUE
+Scaling factor 10 
+
+Too many elements in object 0 Object wasn't exported.
+
+Polygons max: 8191
+Edges max: 32767
+Points max: 10922
+Too many elements in object 1 Object wasn't exported.
+
+Polygons max: 8191
+Edges max: 32767
+Points max: 10922
