@@ -80,8 +80,8 @@ def movement_sequence(x, y, z, list_joints, clientID, grip):
 
 def inverse_kinematicsVertical(x,y,z):
     cabGrados = 0
-    b = 0.2  # longitud de brazo mm
-    ab = 0.2  # longitud de antebrazo mm
+    b = 0.3  # longitud de brazo mm
+    ab = 0.3  # longitud de antebrazo mm
     m = 0.1 + 0.145  # longitud de muñequilla mm + pinza
     H = 0.2  # altura de base mm
 
