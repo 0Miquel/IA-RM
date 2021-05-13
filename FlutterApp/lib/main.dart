@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'IA-RM',
       theme: ThemeData(
         primarySwatch: Colors.orange,
-        canvasColor: Color.fromRGBO(255, 254, 229, 1),
+        canvasColor: Colors.orangeAccent,
       ),
       initialRoute: '/',
       routes: {
