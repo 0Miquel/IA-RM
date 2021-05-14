@@ -7,6 +7,7 @@ import sim
 from visualize_fun import *
 from coppelia_fun import *
 from movement_fun import *
+from werkzeug.serving import WSGIRequestHandler
 
 app = Flask(__name__)
 app.secret_key = 'abc'
@@ -28,6 +29,7 @@ xf = 0
 yf = 0
 object_handler = 0
 angle0 = 0
+object_grabbed = False
 
 @app.route('/coppelia', methods=['GET','POST'])
 def hello_world():
@@ -76,6 +78,7 @@ def image():
     os.chdir(directory)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     cv2.imwrite("image.png", image)
+    print('fine')
     return send_file('image.png', mimetype='image/png')
 
 @app.route('/getObject', methods=['GET','POST'])
@@ -97,38 +100,40 @@ def getObject():
     global yf
     global object_handler
     global angle0
-
+    global object_grabbed
     response = jsonify(res="notok")
     content = request.get_json()
-    x = int(content['x'])
-    y = int(content['y'])
+    x = int(content['y'])
+    y = int(content['x'])
     # *************************************************************
 
     print(x, y)
     image = get_image(clientID, sensorHandle)
     n_objects, im_labels = get_objects(image)
-    if im_labels[y, x] != 0:
-
+    if im_labels[y, x] != 0 and not object_grabbed:
         object_label = im_labels[y, x]
-        yf, xf, orientation = get_centroids_orientation(object_label, im_labels)
-        xf = np.around(0.5 - xf * 0.5 / 512, 3)
-        yf = np.around(0.5 - yf * 0.5 / 512, 3)
-        print(f"x = {xf}, y = {yf}, orientation = {orientation}, object_label = {object_label}")
+        y, x, orientation = get_centroids_orientation(object_label, im_labels)
+        xf = np.around(0.5 - x * 0.5 / 512, 3)
+        yf = np.around(0.5 - y * 0.5 / 512, 3)
+        print(f"x = {xf}, y = {yf}, orientation = {orientation}")
+        correction_degree, reachable = movement_sequence(xf, yf, 0.25, list_joints, clientID)
 
-        correction_degree, reachable = movement_sequenceVertical(xf, yf, 0.1, list_joints,
-                                                                 clientID)
         if reachable:
             response = jsonify(res="ok")
-            angle0 = alignGrip(clientID, xf, yf, joint4, 0)
+            time.sleep(1)
             move_joint5(clientID, joint5, orientation, correction_degree)
-            for z in range(9, 1, -1):
-                zf = z
-                sensor_distance, object_handler = get_sensor_distance(clientID, psensor)
-                if sensor_distance < 0.03:
-                    break
-                _, reachable = movement_sequenceVertical(xf, yf, z * 0.01, list_joints, clientID)
-                angle0 = alignGrip(clientID, xf, yf, joint4, angle0)
+
+            time.sleep(1)
+            all_degrees = line(xf, yf, 0.25)
+            object_handler, zf = grab_object(all_degrees, clientID, list_joints, psensor)
+
+            time.sleep(1)
             gripper(clientID, 1, object_handler)
+
+            time.sleep(1)
+            all_degrees = line_up(xf, yf, zf - 0.5, 0.25)
+            move_line(all_degrees, clientID, list_joints)
+            object_grabbed = True
 
 
     #*************************************************************
@@ -154,32 +159,40 @@ def placeObject():
     global yf
     global object_handler
     global angle0
-
+    global object_grabbed
     response = jsonify(res="notok")
     content = request.get_json()
-    x = int(content['x'])
-    y = int(content['y'])
+    x = int(content['y'])
+    y = int(content['x'])
     #*************************************************************
 
-    _, reachable = movement_sequenceVertical(xf, yf, 0.2, list_joints, clientID)
     xf = np.around(0.5 - x * 0.5 / 512, 3)
     yf = np.around(0.5 - y * 0.5 / 512, 3)
     print(f"x = {xf}, y = {yf}")
-    _, reachable = movement_sequenceVertical(xf, yf, 0.2, list_joints, clientID)
+    correction_degree, reachable = movement_sequence(xf, yf, 0.25, list_joints, clientID)
+
     if reachable:
         response = jsonify(res="ok")
-        angle0 = alignGrip(clientID, xf, yf, joint4, angle0)
-        for z in range(19, session["zf"], -1):
-            _, reachable = movement_sequenceVertical(xf, yf, z * 0.01, list_joints, clientID)
-            angle0 = alignGrip(clientID, xf, yf, joint4, angle0)
+        time.sleep(1)
+        all_degrees = line_down(xf, yf, 0.25, zf - 0.5)
+        move_line(all_degrees, clientID, list_joints)
+
+        time.sleep(1)
         gripper(clientID, 0, object_handler)
+
+        time.sleep(1)
+        all_degrees = line_up(xf, yf, zf - 0.5, 0.25)
+        move_line(all_degrees, clientID, list_joints)
+
+        time.sleep(1)
         move_home(clientID, list_joints)
+        object_grabbed = False
 
     # *************************************************************
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
 if __name__ == '__main__':
-
+    WSGIRequestHandler.protocol_version = "HTTP/1.1"
     app.run()
 
