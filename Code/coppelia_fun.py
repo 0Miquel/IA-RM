@@ -17,10 +17,10 @@ def connect(port):
 
 def get_sensor_distance(clientID, psensor):
     """
-
-    :param clientID:
-    :param psensor:
-    :return:
+    Detecta el objeto más cercano y la distancia a la que se encuentra
+    :param clientID: ID del cliente de la API de Coppelia
+    :param psensor: ID del sensor de ultrasonidos
+    :return: Distancia del sensor al objeto
     """
     errorCode, detectionState, detectedPoint, detectedObjectHandle, detectedSurfaceNormalVector=sim.simxReadProximitySensor(clientID,psensor, sim.simx_opmode_blocking)
     sensor_distance = np.linalg.norm(detectedPoint)
@@ -31,6 +31,7 @@ def gripper(clientID, val, object_handler):
     Acciona el efector de la pinza remotamente
     :param clientID: Coppelia ID
     :param val: Acción a realizar sobre la pinza, 0 = abrir, 1 = cerrar
+    :param object_handler: ID del objeto a agarrar
     :return: Codigo del resultado, 0 = satisfactorio
     """
     retCode, attach = sim.simxGetObjectHandle(clientID, 'ROBOTIQ_85_attachPoint', sim.simx_opmode_blocking)
