@@ -3,6 +3,7 @@ from visualize_fun import *
 from coppelia_fun import *
 from movement_fun import *
 
+
 clientID = connect(19999)
 grip, joint1, joint2, joint3, joint4, joint5, dummy, sensorHandle, psensor = get_ids(clientID)
 list_joints = [joint1, joint2, joint3, joint4]
@@ -16,6 +17,7 @@ running = True
 
 while running:
     image = get_image(clientID, sensorHandle)
+
     surface = pygame.surfarray.make_surface(image)
     screen.blit(surface, (0, 0))
 
@@ -25,6 +27,7 @@ while running:
 
         if event.type == pygame.MOUSEBUTTONUP:
             y, x = pygame.mouse.get_pos()
+            print(y,x)
             n_objects, im_labels = get_objects(image)
             if im_labels[y, x] != 0 and not object_grabbed:
                 object_label = im_labels[y, x]
