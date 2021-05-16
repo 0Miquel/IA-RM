@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:rlp/Pages/PlacePage.dart';
+import 'package:flutter/services.dart';
+
 
 class GetObjectBox extends StatelessWidget {
   final String imageUrl;
@@ -18,7 +21,7 @@ class GetObjectBox extends StatelessWidget {
     Widget continueButton = FlatButton(
       child: Text("YES"),
       onPressed: () => sendPosition(
-          context, [details.localPosition.dx, details.localPosition.dy]),
+          context, [details.localPosition.dy, details.localPosition.dx]),
     );
 
     AlertDialog alert = AlertDialog(
@@ -57,7 +60,19 @@ class GetObjectBox extends StatelessWidget {
       },
     );
   }
+  void obtenirImage(BuildContext context) async {
+    //final String url = 'https://ia-rm-312715.oa.r.appspot.com/coppelia';
 
+    //final String url = 'https://ia-rm-312715.oa.r.appspot.com/coppelia';
+    final String url = 'http://10.0.2.2:5000/getObject.png';
+    HttpClient httpClient = new HttpClient();
+    HttpClientRequest request = await httpClient.getUrl(Uri.parse(url));
+
+    HttpClientResponse response = await request.close();
+
+    print(response.statusCode);
+    httpClient.close();
+  }
   void sendPosition(BuildContext context, List<double> element) async {
 
     double x = element[0] * 512 /(MediaQuery.of(context).size.width - 60);
@@ -76,6 +91,7 @@ class GetObjectBox extends StatelessWidget {
     httpClient.close();
 
     if (jsonDecode(reply)['res'] == 'ok') {
+      obtenirImage(context);
       Navigator.of(context).pushNamed(PlacePage.routeName);
       //print('ok');
     } else {
@@ -89,6 +105,7 @@ class GetObjectBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    imageCache.clear();
     return Stack(
       children: [
         Positioned(
@@ -96,6 +113,7 @@ class GetObjectBox extends StatelessWidget {
           left: 0,
           child: Image(
             image: NetworkImage(imageUrl),
+            key: ValueKey(imageUrl),
             height: MediaQuery.of(context).size.width - 60,
             width: MediaQuery.of(context).size.width - 60,
             //fit: BoxFit.contain,

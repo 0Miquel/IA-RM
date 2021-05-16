@@ -20,7 +20,7 @@ class PlaceObjectBox extends StatelessWidget {
     Widget continueButton = FlatButton(
       child: Text("YES"),
       onPressed: () => sendPosition(
-          context, [details.localPosition.dx, details.localPosition.dy]),
+          context, [details.localPosition.dy, details.localPosition.dx]),
     );
 
     AlertDialog alert = AlertDialog(
@@ -66,7 +66,7 @@ class PlaceObjectBox extends StatelessWidget {
 
     final Map jsonMap = {"x": x, "y": y};
     //final String url = 'https://ia-rm-313007.oa.r.appspot.com/getObject';
-    final String url = 'http://10.0.2.2:5000/getObject';
+    final String url = 'http://10.0.2.2:5000/placeObject';
     HttpClient httpClient = new HttpClient();
     HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
     request.headers.set('content-type', 'application/json');
@@ -90,6 +90,7 @@ class PlaceObjectBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    imageCache.clear();
     return Stack(
       children: [
         Positioned(
@@ -97,6 +98,7 @@ class PlaceObjectBox extends StatelessWidget {
           left: 0,
           child: Image(
             image: NetworkImage(imageUrl),
+            key: ValueKey(imageUrl),
             height: MediaQuery.of(context).size.width - 60,
             width: MediaQuery.of(context).size.width - 60,
             //fit: BoxFit.contain,

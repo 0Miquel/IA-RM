@@ -80,6 +80,7 @@ class OptionPage extends StatelessWidget {
                             MaterialStateProperty.all(Colors.white),
                       ),
                       onPressed: () {
+                        obtenirImage(context);
                         Navigator.of(context).pushNamed(PlacePage.routeName);
                       }, //=> controlId(context),
                       child: Text(
