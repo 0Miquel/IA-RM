@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:rlp/Pages/OptionPage.dart';
 
-import '../Exceptions.dart';
 
 class PlaceObjectBox extends StatelessWidget {
   final String imageUrl;
@@ -65,7 +64,6 @@ class PlaceObjectBox extends StatelessWidget {
     double y = element[1] * 512 /(MediaQuery.of(context).size.width - 60);
 
     final Map jsonMap = {"x": x, "y": y};
-    //final String url = 'https://ia-rm-313007.oa.r.appspot.com/getObject';
     final String url = 'http://10.0.2.2:5000/placeObject';
     HttpClient httpClient = new HttpClient();
     HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
@@ -78,13 +76,9 @@ class PlaceObjectBox extends StatelessWidget {
 
     if (jsonDecode(reply)['res'] == 'ok') {
       Navigator.of(context).pushNamed(OptionPage.routeName);
-      //print('ok');
     } else {
       Navigator.of(context).pop();
       showAlertDialogNotAPlace(context);
-
-      //print('f');
-      //slatar alerta canviar id
     }
   }
 

@@ -8,6 +8,8 @@ from visualize_fun import *
 from coppelia_fun import *
 from movement_fun import *
 from werkzeug.serving import WSGIRequestHandler
+import os
+os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
 app = Flask(__name__)
 app.secret_key = 'abc'
@@ -31,6 +33,7 @@ object_handler = 0
 angle0 = 0
 object_grabbed = False
 outputs = 0
+predictor = build_predictor()
 
 @app.route('/coppelia', methods=['GET','POST'])
 def hello_world():
@@ -46,7 +49,7 @@ def hello_world():
     global sensorHandle
     global psensor
     global list_joints
-
+    global predictor
     content = request.get_json()
     resposta = content['coppeliaid']
     # *************************************************************
@@ -54,6 +57,7 @@ def hello_world():
     port = int(resposta)
     sim.simxFinish(-1)  # just in case, close all opened connections
     clientID = sim.simxStart('127.0.0.1', port, True, True, 1000, 5)  # Conectarse
+    #predictor =
     if clientID == 0:
 
         print("conectado a", port)
@@ -196,6 +200,10 @@ def placeObject():
 @app.route('/listObjects', methods=['GET','POST'])
 def listObject():
     global outputs
+    global predictor
+    global clientID
+    global  sensorHandle
+    image = get_image(clientID, sensorHandle)
     outputs = predict_image(image, predictor)
     dict_objects2 = {0: "apple", 1: "banana", 2: "glass", 3: "orange", 4: "tv controller"}
     objects_list = get_objects_list(outputs, dict_objects2)
@@ -223,6 +231,10 @@ def listObjectSend():
     global object_handler
     global angle0
     global object_grabbed
+    global clientID
+    global sensorHandle
+    image = get_image(clientID, sensorHandle)
+
     response = jsonify(res="notok")
     content = request.get_json()
     object = content['object']
@@ -269,6 +281,6 @@ def objectGrabbed():
 
 if __name__ == '__main__':
     WSGIRequestHandler.protocol_version = "HTTP/1.1"
-    predictor = build_predictor()
     app.run()
+
 

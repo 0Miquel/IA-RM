@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:rlp/Pages/OptionPage.dart';
-import 'package:http/http.dart' as http;
 
 class HomePage extends StatelessWidget {
   final myController = TextEditingController();
+  static final String routeName = '/';
   showAlertDialog(BuildContext context) {
 
     Widget continueButton = FlatButton(
@@ -30,8 +29,8 @@ class HomePage extends StatelessWidget {
     );
   }
   void controlId(BuildContext context) async {
+
     final Map jsonMap = {"coppeliaid": myController.text};
-    //final String url = 'https://ia-rm-313007.oa.r.appspot.com/coppelia';
     final String url = 'http://10.0.2.2:5000/coppelia';
     HttpClient httpClient = new HttpClient();
     HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
@@ -55,18 +54,6 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       body: Container(
-        /*
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [
-              HexColor('#FF7B02'),
-              HexColor('#FFCB52'),
-            ],
-          ),
-        ),
-        */
         child: Center(
           child: Container(
             width: 300,

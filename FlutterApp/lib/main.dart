@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rlp/Pages/GetPage.dart';
 import 'package:rlp/Pages/OptionPage.dart';
-
+import 'package:rlp/Pages/listPage.dart';
 import 'Pages/PlacePage.dart';
 import 'Pages/homePage.dart';
 
@@ -25,26 +25,8 @@ class MyApp extends StatelessWidget {
         OptionPage.routeName: (ctx) => OptionPage(),
         GetPage.routeName: (ctx) => GetPage(),
         PlacePage.routeName: (ctx) => PlacePage(),
+        ListPage.routeName: (ctx) => ListPage(),
       },
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('DeliMeals'),
-      ),
-      body: Center(
-        child: Text('Navigation Time!'),
-      ),
     );
   }
 }
