@@ -34,11 +34,11 @@ while running:
     pygame.display.update()
 
     if not object_grabbed:
-        word = input("Enter object: ")
         ######
         outputs = predict_image(image, predictor)
         objects_list = get_objects_list(outputs, dict_objects2)
         print(objects_list)
+        word = input("Enter object: ")
         y, x = get_object_n(outputs, dict_objects[word])
         ######
         n_objects, im_labels = get_objects(image)

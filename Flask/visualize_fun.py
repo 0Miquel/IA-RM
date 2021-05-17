@@ -4,6 +4,20 @@ import sympy as sp
 import cv2                      # opencv
 import math
 from skimage.measure import regionprops_table
+import os
+
+import torch, torchvision
+torch.cuda.empty_cache()
+import detectron2
+from detectron2.utils.logger import setup_logger
+setup_logger()
+# import some common detectron2 utilities
+from detectron2 import model_zoo
+from detectron2.engine import DefaultPredictor
+from detectron2.config import get_cfg
+from detectron2.utils.visualizer import Visualizer
+from detectron2.data import MetadataCatalog, DatasetCatalog
+from detectron2.data.datasets import register_coco_instances
 
 def get_image(clientID, sensorHandle):
     """
@@ -45,3 +59,32 @@ def get_centroids_orientation(object_label, im_labels):
     #minor_axis = props['minor_axis_length'][object_label - 1]
     return centroid_x, centroid_y, orientation
 
+def build_predictor():
+    cfg = get_cfg()
+    # add project-specific config (e.g., TensorMask) here if you're not running a model in detectron2's core library
+    cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
+    cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5  # set threshold for this model
+    # Find a model from detectron2's model zoo. You can use the https://dl.fbaipublicfiles... url as well
+    cfg.MODEL.WEIGHTS = os.path.join(cfg.OUTPUT_DIR, "model_final.pth")
+    cfg.MODEL.ROI_HEADS.NUM_CLASSES = 5
+    predictor = DefaultPredictor(cfg)
+    return predictor
+
+def predict_image(image, predictor):
+    outputs = predictor(image)
+    return outputs
+
+def get_object_n(outputs, n):
+    objects_detected = outputs["instances"].pred_classes.cpu().numpy()
+    i = np.where(n == objects_detected)[0][0]
+    box = outputs["instances"].pred_boxes.tensor.cpu().numpy()[i]
+    x = (box[2] - box[0]) / 2
+    y = (box[3] - box[1]) / 2
+    c_x = box[0] + x
+    c_y = box[1] + y
+    return int(c_y), int(c_x)
+
+def get_objects_list(outputs, dict_objects2):
+    objects_detected = outputs["instances"].pred_classes.cpu().numpy()
+    objects_list = [dict_objects2[n] for n in objects_detected]
+    return objects_list

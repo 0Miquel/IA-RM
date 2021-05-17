@@ -30,6 +30,7 @@ yf = 0
 object_handler = 0
 angle0 = 0
 object_grabbed = False
+outputs = 0
 
 @app.route('/coppelia', methods=['GET','POST'])
 def hello_world():
@@ -192,7 +193,82 @@ def placeObject():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+@app.route('/listObjects', methods=['GET','POST'])
+def listObject():
+    global outputs
+    outputs = predict_image(image, predictor)
+    dict_objects2 = {0: "apple", 1: "banana", 2: "glass", 3: "orange", 4: "tv controller"}
+    objects_list = get_objects_list(outputs, dict_objects2)
+    llista = {'list': objects_list}
+    return json.dumps(llista)
+
+@app.route('/listObjectSend', methods=['GET','POST'])
+def listObjectSend():
+    global outputs
+    global clientID
+    global grip
+    global joint1
+    global joint2
+    global joint3
+    global joint4
+    global joint5
+    global dummy
+    global dummy
+    global sensorHandle
+    global psensor
+    global list_joints
+    global zf
+    global xf
+    global yf
+    global object_handler
+    global angle0
+    global object_grabbed
+    response = jsonify(res="notok")
+    content = request.get_json()
+    object = content['object']
+    dict_objects = {"apple": 0, "banana": 1, "glass": 2, "orange": 3, "tv controller": 4}
+    y, x = get_object_n(outputs, dict_objects[object])
+
+    n_objects, im_labels = get_objects(image)
+
+    object_label = im_labels[y, x]
+    y, x, orientation = get_centroids_orientation(object_label, im_labels)
+    xf = np.around(0.5 - x * 0.5 / 512, 3)
+    yf = np.around(0.5 - y * 0.5 / 512, 3)
+    print(f"x = {xf}, y = {yf}, orientation = {orientation}")
+    correction_degree, reachable = movement_sequence(xf, yf, 0.25, list_joints, clientID)
+
+    if reachable:
+        response = jsonify(res="ok")
+        time.sleep(1)
+        move_joint5(clientID, joint5, orientation, correction_degree)
+
+        time.sleep(1)
+        all_degrees = line(xf, yf, 0.25)
+        object_handler, zf = grab_object(all_degrees, clientID, list_joints, psensor)
+
+        time.sleep(1)
+        gripper(clientID, 1, object_handler)
+
+        time.sleep(1)
+        all_degrees = line_up(xf, yf, zf - 0.5, 0.25)
+        move_line(all_degrees, clientID, list_joints)
+        object_grabbed = True
+
+    return response
+
+@app.route('/objectGrabbed', methods=['GET', 'POST'])
+def objectGrabbed():
+    global object_grabbed
+    if(object_grabbed):
+        response = jsonify(res="grabbed")
+    else:
+        response = jsonify(res="notgrabbed")
+
+    return response
+
 if __name__ == '__main__':
     WSGIRequestHandler.protocol_version = "HTTP/1.1"
+    predictor = build_predictor()
     app.run()
 
