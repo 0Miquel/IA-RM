@@ -3,6 +3,8 @@ from coppelia_fun import *
 from movement_fun import *
 
 import pygame
+import os
+os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
 import torch, torchvision
 torch.cuda.empty_cache()
@@ -16,8 +18,8 @@ screen = pygame.display.set_mode((512, 512))
 pygame.display.set_caption('IA-RM')
 
 predictor = build_predictor()
-dict_objects2 = {0:"apple", 1:"banana", 2:"glass", 3:"orange", 4:"tv controller"}
-dict_objects = {"apple":0, "banana":1, "glass":2, "orange":3, "tv controller":4}
+dict_objects2 = {0:"apple", 1:"banana", 2:"bluepills", 3:"bluepurplepill" , 4:"glass", 5:"greenblackpills",6:"orange" , 7:"redpills", 8:"tv controller"}
+dict_objects = {"apple":0, "banana":1, "bluepills":2, "bluepurplepill":3 , "glass":4, "greenblackpills":5 ,"orange":6 , "redpills":7, "tv controller":8}
 
 clientID = connect(19999)
 grip, joint1, joint2, joint3, joint4, joint5, dummy, sensorHandle, psensor = get_ids(clientID)
