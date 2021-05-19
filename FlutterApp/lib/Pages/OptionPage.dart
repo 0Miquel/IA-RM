@@ -15,7 +15,7 @@ class OptionPage extends StatelessWidget {
     HttpClient httpClient = new HttpClient();
     HttpClientRequest request = await httpClient.getUrl(Uri.parse(url));
     HttpClientResponse response = await request.close();
-    httpClient.close();
+    //httpClient.close();
   }
 
   Future<bool> objectGrabbed(BuildContext context) async {
