@@ -60,19 +60,15 @@ def get_centroids_orientation(object_label, im_labels):
     return centroid_x, centroid_y, orientation
 
 def build_predictor():
-    cfg = get_cfg()
-    # add project-specific config (e.g., TensorMask) here if you're not running a model in detectron2's core library
-    cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
-    cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5  # set threshold for this model
-    # Find a model from detectron2's model zoo. You can use the https://dl.fbaipublicfiles... url as well
-    cfg.MODEL.WEIGHTS = os.path.join(cfg.OUTPUT_DIR, "model_final.pth")
-    cfg.MODEL.ROI_HEADS.NUM_CLASSES = 5
-    predictor = DefaultPredictor(cfg)
-    return predictor
+    # Model
+    model = torch.hub.load('ultralytics/yolov5', 'custom', path='/content/yolov5/best.pt')
+    model.conf = 0.6  # confidence threshold (0-1)
+    return model
 
 def predict_image(image, predictor):
-    outputs = predictor(image)
-    return outputs
+
+    results = predictor(image)
+    return results
 
 def get_object_n(outputs, n):
     objects_detected = outputs["instances"].pred_classes.cpu().numpy()
