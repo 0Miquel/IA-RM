@@ -8,9 +8,9 @@ os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
 import torch, torchvision
 torch.cuda.empty_cache()
-import detectron2
+"""import detectron2
 from detectron2.utils.logger import setup_logger
-setup_logger()
+setup_logger()"""
 
 pygame.init()
 

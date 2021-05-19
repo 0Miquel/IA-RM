@@ -8,7 +8,7 @@ import os
 
 import torch, torchvision
 torch.cuda.empty_cache()
-import detectron2
+"""import detectron2
 from detectron2.utils.logger import setup_logger
 setup_logger()
 # import some common detectron2 utilities
@@ -17,7 +17,7 @@ from detectron2.engine import DefaultPredictor
 from detectron2.config import get_cfg
 from detectron2.utils.visualizer import Visualizer
 from detectron2.data import MetadataCatalog, DatasetCatalog
-from detectron2.data.datasets import register_coco_instances
+from detectron2.data.datasets import register_coco_instances"""
 
 def get_image(clientID, sensorHandle):
     """
@@ -61,19 +61,18 @@ def get_centroids_orientation(object_label, im_labels):
 
 def build_predictor():
     # Model
-    model = torch.hub.load('ultralytics/yolov5', 'custom', path='/content/yolov5/best.pt')
+    model = torch.hub.load('ultralytics/yolov5', 'custom', path='model/best.pt')
     model.conf = 0.6  # confidence threshold (0-1)
     return model
 
 def predict_image(image, predictor):
-
     results = predictor(image)
     return results
 
 def get_object_n(outputs, n):
-    objects_detected = outputs["instances"].pred_classes.cpu().numpy()
+    objects_detected = outputs.xyxy[0].cpu().numpy()[:,-1]
     i = np.where(n == objects_detected)[0][0]
-    box = outputs["instances"].pred_boxes.tensor.cpu().numpy()[i]
+    box = outputs.xyxy[0].cpu().numpy()[i,:4]
     x = (box[2] - box[0]) / 2
     y = (box[3] - box[1]) / 2
     c_x = box[0] + x
@@ -81,6 +80,7 @@ def get_object_n(outputs, n):
     return int(c_y), int(c_x)
 
 def get_objects_list(outputs, dict_objects2):
-    objects_detected = outputs["instances"].pred_classes.cpu().numpy()
+    #objects_detected = outputs["instances"].pred_classes.cpu().numpy()
+    objects_detected = outputs.xyxy[0].cpu().numpy()[:,-1]
     objects_list = [dict_objects2[n] for n in objects_detected]
     return objects_list
