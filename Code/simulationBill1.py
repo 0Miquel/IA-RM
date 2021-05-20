@@ -63,41 +63,36 @@ while running:
                     #object_grabbed = True
 
             #elif object_grabbed and not billHasObject:
-                time.sleep(3)
-                retCode = sim.simxSetJointTargetPosition(clientID, leftShoulder, 5 * np.pi / 180, sim.simx_opmode_oneshot)
-                retCode = sim.simxSetJointTargetPosition(clientID, leftElbow, -55 * np.pi / 180, sim.simx_opmode_oneshot)
-                time.sleep(1)
-                retCode, pos = sim.simxGetObjectPosition(clientID, dummyMa, -1, sim.simx_opmode_blocking)
-                xb = pos[0]
-                yb = pos[1]
-                #xf = np.around(0.5 - pos[0] * 0.5 / 512, 3)
-                #yf = np.around(0.5 - pos[1] * 0.5 / 512, 3)
-                print(f"x = {xf}, y = {yf}")
-                correction_degree, reachable = movement_sequence(xb, yb, pos[2] - 0.5, list_joints, clientID)
+                    time.sleep(3)
+                    retCode = sim.simxSetJointTargetPosition(clientID, leftShoulder, 5 * np.pi / 180, sim.simx_opmode_oneshot)
+                    retCode = sim.simxSetJointTargetPosition(clientID, leftElbow, -55 * np.pi / 180, sim.simx_opmode_oneshot)
+                    time.sleep(1)
+                    retCode, pos = sim.simxGetObjectPosition(clientID, dummyMa, -1, sim.simx_opmode_blocking)
+                    xb = pos[0]
+                    yb = pos[1]
 
-                if reachable:
-                    time.sleep(1)
-                    all_degrees = line_down(xb, yb, 0.15, pos[2] - 0.5)
-                    move_line(all_degrees, clientID, list_joints)
-
-                    #time.sleep(1)
-                    #gripper(clientID, 0, object_handler)
-
-                    time.sleep(1)
-                    all_degrees = line_up(xb, yb, pos[2] - 0.5, 0.15)
-                    move_line(all_degrees, clientID, list_joints)
-                    
-                    time.sleep(1)
-                    #sim.simxSetObjectParent(clientID, object_handler, -1, True, sim.simx_opmode_oneshot)
-                    sim.simxSetObjectParent(clientID, object_handler, attachBill, True, sim.simx_opmode_oneshot)
-                    time.sleep(1)
-                    res,retInts,retFloats,retStrings,retBuffer=sim.simxCallScriptFunction(clientID, "ROBOTIQ_85", sim.sim_scripttype_childscript,"gripper",[0],[],[],"", sim.simx_opmode_blocking)
-                    time.sleep(1)
-                    move_home(clientID, list_joints)
-                    print(object_grabbed)
-                    object_grabbed = True
-                    print(object_grabbed)
-                    #billHasObject = True
+                    print(f"x = {xf}, y = {yf}")
+                    correction_degree, reachable = movement_sequence(xb, yb, pos[2] - 0.5, list_joints, clientID)
+    
+                    if reachable:
+                        time.sleep(1)
+                        all_degrees = line_down(xb, yb, 0.15, pos[2] - 0.5)
+                        move_line(all_degrees, clientID, list_joints)
+    
+                        time.sleep(1)
+                        all_degrees = line_up(xb, yb, pos[2] - 0.5, 0.15)
+                        move_line(all_degrees, clientID, list_joints)
+                        
+                        time.sleep(1)
+                        sim.simxSetObjectParent(clientID, object_handler, attachBill, True, sim.simx_opmode_oneshot)
+                        time.sleep(1)
+                        res,retInts,retFloats,retStrings,retBuffer=sim.simxCallScriptFunction(clientID, "ROBOTIQ_85", sim.sim_scripttype_childscript,"gripper",[0],[],[],"", sim.simx_opmode_blocking)
+                        time.sleep(1)
+                        move_home(clientID, list_joints)
+                        print(object_grabbed)
+                        object_grabbed = True
+                        print(object_grabbed)
+                        
                 
                 
             elif object_grabbed:
@@ -138,7 +133,7 @@ while running:
                 retCode = sim.simxSetJointTargetPosition(clientID, leftShoulder, 0 * np.pi / 180, sim.simx_opmode_oneshot)
                 retCode = sim.simxSetJointTargetPosition(clientID, leftElbow, 0 * np.pi / 180, sim.simx_opmode_oneshot)
                 
-                billHasObject = False
+                object_grabbed = False
         
 
     pygame.display.update()
