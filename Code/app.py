@@ -220,6 +220,7 @@ def placeObject():
     retCode, pos = sim.simxGetObjectPosition(clientID, dummyMa, -1, sim.simx_opmode_blocking)
     correction_degree, reachable = movement_sequence(pos[0], pos[1], 0.3, list_joints, clientID)
     if reachable:
+        response = jsonify(res="ok")
         time.sleep(1)
         all_degrees = line_down(pos[0], pos[1], 0.3, pos[2] - 0.5)
         move_line(all_degrees, clientID, list_joints)
@@ -297,6 +298,11 @@ def listObjectSend():
     global object_grabbed
     global clientID
     global sensorHandle
+    retCode, leftShoulder = sim.simxGetObjectHandle(clientID, 'Bill_leftShoulderJoint', sim.simx_opmode_blocking)
+    retCode, leftElbow = sim.simxGetObjectHandle(clientID, 'Bill_leftElbowJoint', sim.simx_opmode_blocking)
+    retCode, dummyMa = sim.simxGetObjectHandle(clientID, 'Dummy_MaBill', sim.simx_opmode_blocking)
+    retCode, attachBill = sim.simxGetObjectHandle(clientID, 'attachPointBill', sim.simx_opmode_blocking)
+    retCode, attach = sim.simxGetObjectHandle(clientID, 'ROBOTIQ_85_attachPoint', sim.simx_opmode_blocking)
     image = get_image(clientID, sensorHandle)
 
     response = jsonify(res="notok")
@@ -331,7 +337,34 @@ def listObjectSend():
         time.sleep(1)
         all_degrees = line_up(xf, yf, zf - 0.5, 0.25)
         move_line(all_degrees, clientID, list_joints)
-        object_grabbed = True
+
+        time.sleep(2)
+        retCode = sim.simxSetJointTargetPosition(clientID, leftShoulder, 5 * np.pi / 180, sim.simx_opmode_oneshot)
+        retCode = sim.simxSetJointTargetPosition(clientID, leftElbow, -55 * np.pi / 180, sim.simx_opmode_oneshot)
+        time.sleep(1)
+        retCode, pos = sim.simxGetObjectPosition(clientID, dummyMa, -1, sim.simx_opmode_blocking)
+        xb = pos[0]
+        yb = pos[1]
+
+        print(f"x = {xf}, y = {yf}")
+        correction_degree, reachable = movement_sequence(xb, yb, pos[2] - 0.5, list_joints, clientID)
+
+        if reachable:
+            time.sleep(1)
+            sim.simxSetObjectParent(clientID, object_handler, attachBill, True, sim.simx_opmode_oneshot)
+            time.sleep(1)
+            res, retInts, retFloats, retStrings, retBuffer = sim.simxCallScriptFunction(clientID, "ROBOTIQ_85",
+                                                                                        sim.sim_scripttype_childscript,
+                                                                                        "gripper", [0], [], [], "",
+                                                                                        sim.simx_opmode_blocking)
+
+            time.sleep(1)
+            all_degrees = line_up(xb, yb, pos[2] - 0.5, 0.25)
+            move_line(all_degrees, clientID, list_joints)
+
+            time.sleep(1)
+            move_home(clientID, list_joints)
+            object_grabbed = True
 
     return response
 
