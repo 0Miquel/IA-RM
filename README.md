@@ -1,5 +1,5 @@
 # IA-RM
-### Anthropomorphic arm for assistance purposes controlled via a mobile app and object detection.
+### Anthropomorphic arm for assistance purposes controlled via a mobile app and object recognition.
 
 ![complet](https://user-images.githubusercontent.com/49688038/116916362-83492400-ac4d-11eb-8e5a-c14069ae2904.PNG)
 ### Robotics, language and planification project from Universitat Autònoma de Barcelona
@@ -30,7 +30,7 @@ List of used components:
 
 All the software is controlled via Python code, which is compatible with Raspberry Pi.
 
-### Object detection
+### Object recognition
 The model is able to detect the following objects:
 - Banana
 - Orange
