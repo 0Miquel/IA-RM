@@ -70,18 +70,19 @@ while running:
             all_degrees = line_up(xf, yf, zf - 0.5, 0.25)
             move_line(all_degrees, clientID, list_joints)
 
-            time.sleep(2)
-            retCode = sim.simxSetJointTargetPosition(clientID, leftShoulder, 5 * np.pi / 180, sim.simx_opmode_oneshot)
-            retCode = sim.simxSetJointTargetPosition(clientID, leftElbow, -55 * np.pi / 180, sim.simx_opmode_oneshot)
             time.sleep(1)
-            retCode, pos = sim.simxGetObjectPosition(clientID, dummyMa, -1, sim.simx_opmode_blocking)
-            xb = pos[0]
-            yb = pos[1]
+            #retCode, pos = sim.simxGetObjectPosition(clientID, dummyMa, -1, sim.simx_opmode_blocking)
+            xb = 0.44
+            yb = -0.24
+            zb = 0.17
 
             print(f"x = {xf}, y = {yf}")
-            correction_degree, reachable = movement_sequence(xb, yb, pos[2] - 0.5, list_joints, clientID)
+            correction_degree, reachable = movement_sequence(xb, yb, zb, list_joints, clientID)
 
             if reachable:
+                time.sleep(1)
+                retCode = sim.simxSetJointTargetPosition(clientID, leftShoulder, 5 * np.pi / 180, sim.simx_opmode_oneshot)
+                retCode = sim.simxSetJointTargetPosition(clientID, leftElbow, -55 * np.pi / 180, sim.simx_opmode_oneshot)
                 time.sleep(1)
                 sim.simxSetObjectParent(clientID, object_handler, attachBill, True, sim.simx_opmode_oneshot)
                 time.sleep(1)
@@ -91,7 +92,7 @@ while running:
                                                                                             sim.simx_opmode_blocking)
 
                 time.sleep(1)
-                all_degrees = line_up(xb, yb, pos[2] - 0.5, 0.25)
+                all_degrees = line_up(xb, yb, zb, 0.25)
                 move_line(all_degrees, clientID, list_joints)
 
                 time.sleep(1)
