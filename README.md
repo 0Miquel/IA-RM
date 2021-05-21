@@ -26,7 +26,8 @@ List of used components:
 
 
 ## Software achitecture
-![software](https://user-images.githubusercontent.com/48658941/119168001-bdddf980-ba60-11eb-8015-e206ffd7bcc7.jpg)
+![Software Architecture](https://user-images.githubusercontent.com/48658941/119172018-ac4b2080-ba65-11eb-9e9e-0b8972bc9a76.jpg)
+
 
 All the software is controlled via Python code, which is compatible with Raspberry Pi.
 
@@ -56,5 +57,11 @@ To develop the mobile App, it is used a framework called Flutter which works wit
 ![app1](https://user-images.githubusercontent.com/48658941/119168193-f087f200-ba60-11eb-81bc-c63d2c1350ec.jpg)
 
 ![app2](https://user-images.githubusercontent.com/48658941/119168302-0eeded80-ba61-11eb-98fb-54403e54f49f.jpg)
+
+## Kinematics
+As it consists of a 5 axis robot which has a huge number of different solutions, it has been decided to develop a kinematics geometric approach instead of an algebraic approach which is also faster and it provides a better user experience.
+
+Additionally, a linear movement has been developed so as to achieve a better and safer grasping.
+
 
 ## Video demonstration
