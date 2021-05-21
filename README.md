@@ -3,7 +3,7 @@
 ### Robotics, language and planification project from Universitat Autònoma de Barcelona
 #### Members:
 - Miquel Romero Blanch
-- Gerard
+- Gerard Graugés Bellver
 - Guillem
 - Oriol Graupera Serra
 
