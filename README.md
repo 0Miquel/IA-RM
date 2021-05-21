@@ -18,6 +18,7 @@
 
 
 ## Object recognition
+![4a2ea804-2c20-48a4-b838-a18eff80d4c2](https://user-images.githubusercontent.com/48658941/119167536-4019ee00-ba60-11eb-8d70-53593fbc1241.jpg)
 
 
 ## Mobile application
