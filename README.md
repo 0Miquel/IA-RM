@@ -12,16 +12,33 @@
 
 #
 ## Hardware scheme
-
+![hardware](https://user-images.githubusercontent.com/48658941/119167890-9edf6780-ba60-11eb-9810-899a9305d32a.jpg)
 
 ## Software achitecture
+![software](https://user-images.githubusercontent.com/48658941/119168001-bdddf980-ba60-11eb-8015-e206ffd7bcc7.jpg)
 
+All the software is controlled via Python code, which is compatible with Raspberry Pi.
 
-## Object recognition
-![4a2ea804-2c20-48a4-b838-a18eff80d4c2](https://user-images.githubusercontent.com/48658941/119167536-4019ee00-ba60-11eb-8d70-53593fbc1241.jpg)
+## Object detection
+The model is able to detect the following objects:
+- Banana
+- Orange
+- Apple
+- Glass
+- TV Command
+
+Additionally, it is also able to detect glasses with different types of pills.
+
+Two different models have been tested for object detection, YOLOv5 and Mask R-CNN provided by [detectron2](https://github.com/facebookresearch/detectron2). As a result, it has been decided to use YOLOv5 which performs better in the pills recognition problem.
 
 
 ## Mobile application
+Mobile application to select the object that will be moved to a specified area. It also gets feedback about the objects in the work area and the robot status.
 
+To develop the mobile App, it is used a framework called Flutter which works with dart programming language. Additionally, to communicate the App and the Python code that controls the robot it is used the framework Flask.
+
+![app1](https://user-images.githubusercontent.com/48658941/119168193-f087f200-ba60-11eb-81bc-c63d2c1350ec.jpg)
+
+![app2](https://user-images.githubusercontent.com/48658941/119168302-0eeded80-ba61-11eb-98fb-54403e54f49f.jpg)
 
 ## Video demonstration
