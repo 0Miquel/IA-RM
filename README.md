@@ -31,6 +31,11 @@ Additionally, it is also able to detect glasses with different types of pills.
 
 Two different models have been tested for object detection, YOLOv5 and Mask R-CNN provided by [detectron2](https://github.com/facebookresearch/detectron2). As a result, it has been decided to use YOLOv5 which performs better in the pills recognition problem.
 
+![yolov5](https://user-images.githubusercontent.com/48658941/119170678-e6b3be00-ba63-11eb-9f0f-37ebf7adf330.jpg)
+
+PONER GIF DE ESTO
+
+PONER LINK AL COLAB O ALGO
 
 ## Mobile application
 Mobile application to select the object that will be moved to a specified area. It also gets feedback about the objects in the work area and the robot status.
