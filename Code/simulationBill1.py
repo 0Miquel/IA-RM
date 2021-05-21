@@ -63,7 +63,7 @@ while running:
                     #object_grabbed = True
 
             #elif object_grabbed and not billHasObject:
-                    time.sleep(3)
+                    time.sleep(2)
                     retCode = sim.simxSetJointTargetPosition(clientID, leftShoulder, 5 * np.pi / 180, sim.simx_opmode_oneshot)
                     retCode = sim.simxSetJointTargetPosition(clientID, leftElbow, -55 * np.pi / 180, sim.simx_opmode_oneshot)
                     time.sleep(1)
@@ -76,35 +76,27 @@ while running:
     
                     if reachable:
                         time.sleep(1)
-                        all_degrees = line_down(xb, yb, 0.15, pos[2] - 0.5)
-                        move_line(all_degrees, clientID, list_joints)
-    
-                        time.sleep(1)
-                        all_degrees = line_up(xb, yb, pos[2] - 0.5, 0.15)
-                        move_line(all_degrees, clientID, list_joints)
-                        
-                        time.sleep(1)
                         sim.simxSetObjectParent(clientID, object_handler, attachBill, True, sim.simx_opmode_oneshot)
                         time.sleep(1)
                         res,retInts,retFloats,retStrings,retBuffer=sim.simxCallScriptFunction(clientID, "ROBOTIQ_85", sim.sim_scripttype_childscript,"gripper",[0],[],[],"", sim.simx_opmode_blocking)
+
+                        time.sleep(1)
+                        all_degrees = line_up(xb, yb, pos[2] - 0.5, 0.25)
+                        move_line(all_degrees, clientID, list_joints)
+
                         time.sleep(1)
                         move_home(clientID, list_joints)
-                        print(object_grabbed)
                         object_grabbed = True
-                        print(object_grabbed)
-                        
-                
-                
+
             elif object_grabbed:
                 x = np.around(0.5 - x * 0.5 / 512, 3)
                 y = np.around(0.5 - y * 0.5 / 512, 3)
                         
                 retCode, pos = sim.simxGetObjectPosition(clientID, dummyMa, -1, sim.simx_opmode_blocking)
                 correction_degree, reachable = movement_sequence(pos[0],pos[1],0.3, list_joints, clientID)
-                time.sleep(2)
                 if reachable:
                     time.sleep(1)
-                    all_degrees = line_down(pos[0],pos[1],0.3, 0.17)
+                    all_degrees = line_down(pos[0],pos[1],0.3, pos[2] - 0.5)
                     move_line(all_degrees, clientID, list_joints)
         
                     time.sleep(1)
@@ -112,19 +104,19 @@ while running:
                     time.sleep(1)
                     res,retInts,retFloats,retStrings,retBuffer=sim.simxCallScriptFunction(clientID, "ROBOTIQ_85", sim.sim_scripttype_childscript,"gripper",[1],[],[],"", sim.simx_opmode_blocking)
                     time.sleep(1)
-                    all_degrees = line_up(pos[0],pos[1],0.17, 0.3)
+                    all_degrees = line_up(pos[0],pos[1],pos[2] - 0.5, 0.3)
                     move_line(all_degrees, clientID, list_joints)
                     time.sleep(2)
-                    _, reachable = movement_sequence(x, y, 0.3, list_joints, clientID)
+                    _, reachable = movement_sequence(x, y, 0.25, list_joints, clientID)
                     time.sleep(2)
-                    all_degrees = line_down(x, y, 0.3, 0.04)
+                    all_degrees = line_down(x, y, 0.25, zf-0.5)
                     move_line(all_degrees, clientID, list_joints)
 
                     time.sleep(2)
                     gripper(clientID, 0, object_handler)
 
                     time.sleep(2)
-                    all_degrees = line_up(x, y, 0.04, 0.3)
+                    all_degrees = line_up(x, y, zf - 0.5, 0.25)
                     move_line(all_degrees, clientID, list_joints)
 
                     time.sleep(1)
