@@ -60,9 +60,7 @@ while running:
                     time.sleep(1)
                     all_degrees = line_up(xf, yf, zf - 0.5, 0.25)
                     move_line(all_degrees, clientID, list_joints)
-                    #object_grabbed = True
 
-            #elif object_grabbed and not billHasObject:
                     time.sleep(2)
                     retCode = sim.simxSetJointTargetPosition(clientID, leftShoulder, 5 * np.pi / 180, sim.simx_opmode_oneshot)
                     retCode = sim.simxSetJointTargetPosition(clientID, leftElbow, -55 * np.pi / 180, sim.simx_opmode_oneshot)
@@ -89,8 +87,8 @@ while running:
                         object_grabbed = True
 
             elif object_grabbed:
-                x = np.around(0.5 - x * 0.5 / 512, 3)
-                y = np.around(0.5 - y * 0.5 / 512, 3)
+                xf = np.around(0.5 - x * 0.5 / 512, 3)
+                yf = np.around(0.5 - y * 0.5 / 512, 3)
                         
                 retCode, pos = sim.simxGetObjectPosition(clientID, dummyMa, -1, sim.simx_opmode_blocking)
                 correction_degree, reachable = movement_sequence(pos[0],pos[1],0.3, list_joints, clientID)
@@ -107,16 +105,17 @@ while running:
                     all_degrees = line_up(pos[0],pos[1],pos[2] - 0.5, 0.3)
                     move_line(all_degrees, clientID, list_joints)
                     time.sleep(2)
-                    _, reachable = movement_sequence(x, y, 0.25, list_joints, clientID)
+                    _, reachable = movement_sequence(xf, yf, 0.25, list_joints, clientID)
+
                     time.sleep(2)
-                    all_degrees = line_down(x, y, 0.25, zf-0.5)
+                    all_degrees = line_down(xf, yf, 0.25, zf-0.5)
                     move_line(all_degrees, clientID, list_joints)
 
                     time.sleep(2)
                     gripper(clientID, 0, object_handler)
 
                     time.sleep(2)
-                    all_degrees = line_up(x, y, zf - 0.5, 0.25)
+                    all_degrees = line_up(xf, yf, zf - 0.5, 0.25)
                     move_line(all_degrees, clientID, list_joints)
 
                     time.sleep(1)
