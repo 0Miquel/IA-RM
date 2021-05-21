@@ -12,14 +12,25 @@
 
 #
 ## Hardware scheme
+List of used components:
+- I2C controller: Connected to the servos 
+- Raspberry Cam: Connected to the raspberry pi
+- Raspberry pi: Connected to the I2C controller, a battery via USB and the camera.
+- Battery: It provides energy to the I2C controller.
+- USB battery:  It provides energy to the Raspberry PI
+- Servos: Connected to the I2C controller. The servos provide the kinematics of the arm.
+- Ultrasonic sensors: Connected to the I2C controller. The sensor provides the height of the object.
+
 ![hardware](https://user-images.githubusercontent.com/48658941/119167890-9edf6780-ba60-11eb-9810-899a9305d32a.jpg)
+
+
 
 ## Software achitecture
 ![software](https://user-images.githubusercontent.com/48658941/119168001-bdddf980-ba60-11eb-8015-e206ffd7bcc7.jpg)
 
 All the software is controlled via Python code, which is compatible with Raspberry Pi.
 
-## Object detection
+### Object detection
 The model is able to detect the following objects:
 - Banana
 - Orange
@@ -37,7 +48,7 @@ PONER GIF DE ESTO
 
 PONER LINK AL COLAB O ALGO
 
-## Mobile application
+### Mobile application
 Mobile application to select the object that will be moved to a specified area. It also gets feedback about the objects in the work area and the robot status.
 
 To develop the mobile App, it is used a framework called Flutter which works with dart programming language. Additionally, to communicate the App and the Python code that controls the robot it is used the framework Flask.
