@@ -43,7 +43,7 @@ Example of the ground truth vs our predictions:
 
 <img src="https://user-images.githubusercontent.com/48658941/119219700-253e8c80-bae7-11eb-8121-5c54f2ace859.gif" width="500" height="500" />
 
-PONER LINK AL COLAB O ALGO
+The training can be checked in the SimulatedObjectsYOLOv5.ipynb notebook.
 
 ### Mobile application
 Mobile application to select the object that will be moved to a specified area. It also gets feedback about the objects in the work area and the robot status.
