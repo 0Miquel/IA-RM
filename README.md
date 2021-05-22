@@ -35,6 +35,8 @@ The model is able to detect the following objects:
 
 Additionally, it is also able to detect glasses with different types of pills.
 
+The dataset has been created manually using the labelme tool. Moreover, Roboflow API has been used for Data Augmentation, which implemented some augmentations like vertical and horizontal flips, rotations and zooms. 
+
 Two different models have been tested for object detection, YOLOv5 and Mask R-CNN provided by [detectron2](https://github.com/facebookresearch/detectron2). As a result, it has been decided to use YOLOv5 which performs better in the pills recognition problem.
 
 ![yolov5](https://user-images.githubusercontent.com/48658941/119170678-e6b3be00-ba63-11eb-9f0f-37ebf7adf330.jpg)
