@@ -64,5 +64,5 @@ Additionally, a linear movement has been developed so as to achieve a better and
 ## Authors
 - Miquel Romero Blanch
 - Gerard Graugés Bellver
-- Guillem
+- Guillem Martínez Sánchez
 - Oriol Graupera Serra
