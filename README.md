@@ -40,7 +40,8 @@ Two different models have been tested for object detection, YOLOv5 and Mask R-CN
 
 ![yolov5](https://user-images.githubusercontent.com/48658941/119170678-e6b3be00-ba63-11eb-9f0f-37ebf7adf330.jpg)
 
-PONER GIF DE ESTO
+Example of the ground truth vs our predictions:
+![gif_yolo](https://user-images.githubusercontent.com/48658941/119219700-253e8c80-bae7-11eb-8121-5c54f2ace859.gif)
 
 PONER LINK AL COLAB O ALGO
 
