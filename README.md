@@ -55,10 +55,11 @@ To develop the mobile App, it is used a framework called Flutter which works wit
 ![app2](https://user-images.githubusercontent.com/48658941/119168302-0eeded80-ba61-11eb-98fb-54403e54f49f.jpg)
 
 ### Kinematics
+![axis](https://user-images.githubusercontent.com/48658941/119224463-ce44b180-bafe-11eb-8119-1549c0bc9e55.png)
+
 As it consists of a 5 axis robot which has a huge number of different solutions, it has been decided to develop a kinematics geometric approach instead of an algebraic approach which is also faster and it provides a better user experience.
 
 Additionally, a linear movement has been developed so as to achieve a better and safer grasping using the line equation.
-
 
 ## Video demonstration
 
