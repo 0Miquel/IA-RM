@@ -63,6 +63,14 @@ As it consists of a 5 axis robot which has a huge number of different solutions,
 
 Additionally, a linear movement has been developed so as to achieve a better and safer grasping using the line equation.
 
+## Simulation Strategy
+The simulator used has been CoppeliaSim. Two main simulations have been developed:
+- Manual: The objects are manually selected by the user through the application and also where to place it.
+- Object recognition: The objects are automatically detected by the vision module and the user decides which object the robot is going to approach.
+
+Furthermore, we have used an android emulator to run the mobile application, which provides the interaction with the robot. 
+
+
 ## Video demonstration
 
 ## Authors
