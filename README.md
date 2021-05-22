@@ -14,15 +14,14 @@ List of used components:
 - Battery: It provides energy to the I2C controller.
 - USB battery:  It provides energy to the Raspberry PI
 - Servos: Connected to the I2C controller. The servos provide the kinematics of the arm.
-- Ultrasonic sensors: Connected to the I2C controller. The sensor provides the height of the object.
+- Ultrasonic sensors: Connected to the I2C controller. The sensor estimates the height of the object.
 
 ![hardware](https://user-images.githubusercontent.com/48658941/119167890-9edf6780-ba60-11eb-9810-899a9305d32a.jpg)
 
 
 
 ## Software achitecture
-![Software Architecture](https://user-images.githubusercontent.com/48658941/119172018-ac4b2080-ba65-11eb-9e9e-0b8972bc9a76.jpg)
-
+![Software Architecture](https://user-images.githubusercontent.com/48658941/119220540-528d3980-baeb-11eb-9890-4cf418c01c8d.jpg)
 
 All the software is controlled via Python code, which is compatible with Raspberry Pi.
 
@@ -41,7 +40,8 @@ Two different models have been tested for object detection, YOLOv5 and Mask R-CN
 ![yolov5](https://user-images.githubusercontent.com/48658941/119170678-e6b3be00-ba63-11eb-9f0f-37ebf7adf330.jpg)
 
 Example of the ground truth vs our predictions:
-![gif_yolo](https://user-images.githubusercontent.com/48658941/119219700-253e8c80-bae7-11eb-8121-5c54f2ace859.gif)
+
+<img src="https://user-images.githubusercontent.com/48658941/119219700-253e8c80-bae7-11eb-8121-5c54f2ace859.gif" width="500" height="500" />
 
 PONER LINK AL COLAB O ALGO
 
@@ -57,7 +57,7 @@ To develop the mobile App, it is used a framework called Flutter which works wit
 ### Kinematics
 As it consists of a 5 axis robot which has a huge number of different solutions, it has been decided to develop a kinematics geometric approach instead of an algebraic approach which is also faster and it provides a better user experience.
 
-Additionally, a linear movement has been developed so as to achieve a better and safer grasping.
+Additionally, a linear movement has been developed so as to achieve a better and safer grasping using the line equation.
 
 
 ## Video demonstration
