@@ -71,6 +71,7 @@ The simulator used has been CoppeliaSim. Two main simulations have been develope
 Furthermore, we have used an android emulator to run the mobile application, which provides the interaction with the robot. 
 
 Images from the simulation escene:
+
 ![image6](https://user-images.githubusercontent.com/48658941/119379842-43abb000-bcc0-11eb-8c27-9fcb29aca1aa.png)
 <img src="https://user-images.githubusercontent.com/48658941/119379853-460e0a00-bcc0-11eb-9cc9-4109a3c67b6e.png" width="247" height="199" />
 
