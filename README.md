@@ -1,7 +1,7 @@
 # IA-RM
 ### Anthropomorphic arm for assistance purposes controlled via a mobile app and object recognition.
 
-![robot](https://user-images.githubusercontent.com/48658941/119174514-f84b9480-ba68-11eb-8a75-8bf788b5b577.jpg)
+![img](https://user-images.githubusercontent.com/49688038/119330774-e5aea680-bc86-11eb-994d-113966b12882.PNG)
 
 ### Robotics, language and planification project from Universitat Autònoma de Barcelona
 
