@@ -5,14 +5,14 @@
 
 ### Robotics, language and planification project from Universitat Autònoma de Barcelona
 
-- [Hardware scheme](##Hardware-scheme)
-- [Software achitecture](##Software-achitecture)
-  * [Object-recognition](###Object-recognition)
-  * [Mobile-application](###Mobile-application)
-  * [Kinematics](###Kinematics)
-- [Simulation Strategy](##Simulation-Strategy)
-- [Video demonstration](##Video-demonstration)
-- [Authors](##Authors)
+- [Hardware scheme](#Hardware-scheme)
+- [Software achitecture](#Software-achitecture)
+  * [Object-recognition](#Object-recognition)
+  * [Mobile-application](#Mobile-application)
+  * [Kinematics](#Kinematics)
+- [Simulation Strategy](#Simulation-Strategy)
+- [Video demonstration](#Video-demonstration)
+- [Authors](#Authors)
 
 #
 ## Hardware scheme
