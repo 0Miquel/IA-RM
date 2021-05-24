@@ -86,6 +86,8 @@ Images from the simulation escene:
 
 ## Video demonstration
 
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/kYF8rPoE1sk/0.jpg)](https://www.youtube.com/watch?v=kYF8rPoE1skE)
+
 ## Authors
 - Miquel Romero Blanch
 - Gerard Graugés Bellver
