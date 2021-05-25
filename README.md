@@ -7,8 +7,8 @@
 
 - [Hardware scheme](#Hardware-scheme)
 - [Software achitecture](#Software-achitecture)
-  * [Object-recognition](#Object-recognition)
-  * [Mobile-application](#Mobile-application)
+  * [Object recognition](#Object-recognition)
+  * [Mobile application](#Mobile-application)
   * [Kinematics](#Kinematics)
 - [Simulation Strategy](#Simulation-Strategy)
 - [Video demonstration](#Video-demonstration)
