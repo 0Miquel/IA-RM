@@ -5,6 +5,7 @@
 
 ### Robotics, language and planification project from Universitat Autònoma de Barcelona
 
+## Table of contents
 - [Hardware scheme](#Hardware-scheme)
 - [Software achitecture](#Software-achitecture)
   * [Object recognition](#Object-recognition)
